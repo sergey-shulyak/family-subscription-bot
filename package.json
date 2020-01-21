@@ -1,0 +1,41 @@
+{
+  "name": "apple-music-payment-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot to automate payment accounting",
+  "main": "build",
+  "repository": "git@github.com:sergey-shulyak/apple-music-payment-bot.git",
+  "author": "Serhii Shuliak",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node build/index.js | pino-pretty",
+    "start:dev": "nodemon",
+    "debug": "node -r ts-node/register src/index.ts | pino-pretty",
+    "tsc": "tsc",
+    "lint": "eslint src/**"
+  },
+  "dependencies": {
+    "dotenv-safe": "^8.2.0",
+    "pino": "^5.16.0",
+    "pino-pretty": "^3.5.0",
+    "telegraf": "^3.35.0"
+  },
+  "devDependencies": {
+    "@types/dotenv-safe": "^8.1.0",
+    "@types/pino": "^5.15.3",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
+    "@typescript-eslint/parser": "^2.17.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-config-standard-with-typescript": "^11.0.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}

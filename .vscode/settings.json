@@ -1,0 +1,7 @@
+{
+  "eslint.enable": true,
+  "cSpell.words": [
+    "telegraf"
+  ],
+  "debug.node.autoAttach": "on"
+}
