@@ -19,7 +19,8 @@
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",
     "ramda": "^0.26.1",
-    "telegraf": "^3.35.0"
+    "telegraf": "^3.35.0",
+    "telegraf-session-redis": "^5.1.0"
   },
   "devDependencies": {
     "@types/dotenv-safe": "^8.1.0",

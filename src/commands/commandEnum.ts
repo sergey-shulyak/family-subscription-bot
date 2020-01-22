@@ -1,3 +1,1 @@
-export enum Command {
-  SetRole = "set_role"
-}
+export enum Command {}

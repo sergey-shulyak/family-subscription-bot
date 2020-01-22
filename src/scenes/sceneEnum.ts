@@ -1,3 +1,4 @@
 export enum Scene {
-  Greeter = "greeter"
+  Greeter = "greeter",
+  Admin = "admin"
 }
