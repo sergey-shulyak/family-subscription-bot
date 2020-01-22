@@ -9,8 +9,10 @@ import RedisSession from "telegraf-session-redis"
 import { scenes } from "../scenes"
 import { Bot } from "../types"
 
+export let session: RedisSession
+
 function configureSession(): RedisSession {
-  const session = new RedisSession({
+  session = new RedisSession({
     store: {
       host: process.env.TELEGRAM_SESSION_HOST ?? "127.0.0.1",
       port: process.env.TELEGRAM_SESSION_PORT ?? 6379

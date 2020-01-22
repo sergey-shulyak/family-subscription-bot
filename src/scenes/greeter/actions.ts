@@ -7,7 +7,7 @@ import { Scene } from "../sceneEnum"
 import { Role } from "../../common/roleEnum"
 import logger from "../../config/logger"
 
-const roleToScene = new Map<Role, Scene>([[Role.Admin, Scene.Admin]])
+const roleToScene = new Map<Role, Scene>([[Role.Owner, Scene.Owner]])
 
 function validateRole(role?: Role): Role {
   const validRoles = Object.values(Role)

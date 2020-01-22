@@ -1,4 +1,4 @@
 import greeterScene from "./greeter"
-import adminScene from "./admin"
+import ownerScene from "./owner"
 
-export const scenes = [greeterScene, adminScene]
+export const scenes = [greeterScene, ownerScene]

@@ -7,9 +7,12 @@ import { configureCommands } from "./commands"
 import { helpMessage } from "./messages/ru/help"
 import configureMiddlewares from "./middlewares"
 import { Scene } from "./scenes/sceneEnum"
+import { pool } from "./db"
+
+export let bot: Bot
 
 function createAndConfigureBot(): Bot {
-  const bot = new Telegraf(env.TELEGRAM_BOT_API_TOKEN)
+  bot = new Telegraf(env.TELEGRAM_BOT_API_TOKEN)
 
   configureMiddlewares(bot)
 
@@ -27,5 +30,7 @@ function createAndConfigureBot(): Bot {
 }
 
 export async function start(): Promise<void> {
-  await createAndConfigureBot().launch()
+  await pool.connect()
+  const bot = createAndConfigureBot()
+  await bot.launch()
 }

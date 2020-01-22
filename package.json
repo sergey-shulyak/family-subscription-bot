@@ -2,7 +2,7 @@
   "name": "subscription-payment-bot",
   "version": "1.0.0",
   "description": "Telegram bot to automate payment accounting",
-  "main": "build",
+  "main": "build/server.js",
   "repository": "git@github.com:sergey-shulyak/apple-music-payment-bot.git",
   "author": "Serhii Shuliak",
   "license": "MIT",
@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node build/index.js | pino-pretty",
     "start:dev": "nodemon",
-    "debug": "node -r ts-node/register src/index.ts | pino-pretty",
+    "debug": "node -r ts-node/register src/server.ts | pino-pretty",
     "tsc": "tsc",
     "lint": "eslint --ext ts src/**"
   },
