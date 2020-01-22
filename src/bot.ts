@@ -9,9 +9,7 @@ import configureMiddlewares from "./middlewares"
 import { Scene } from "./scenes/sceneEnum"
 
 function createAndConfigureBot(): Bot {
-  const bot = new Telegraf(env.TELEGRAM_BOT_API_TOKEN, {
-    username: env.BOT_NAME
-  })
+  const bot = new Telegraf(env.TELEGRAM_BOT_API_TOKEN)
 
   configureMiddlewares(bot)
 

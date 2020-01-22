@@ -2,7 +2,6 @@ import dotenv from "dotenv-safe"
 import logger from "./logger"
 
 interface AppConfig {
-  BOT_NAME: string
   TELEGRAM_BOT_API_TOKEN: string
 }
 
