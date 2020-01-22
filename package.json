@@ -1,5 +1,5 @@
 {
-  "name": "apple-music-payment-bot",
+  "name": "subscription-payment-bot",
   "version": "1.0.0",
   "description": "Telegram bot to automate payment accounting",
   "main": "build",
