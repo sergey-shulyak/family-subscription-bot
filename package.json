@@ -1,5 +1,5 @@
 {
-  "name": "subscription-payment-bot",
+  "name": "family-subscription-bot",
   "version": "1.0.0",
   "description": "Telegram bot to automate payment accounting",
   "main": "build/server.js",

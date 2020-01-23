@@ -10,7 +10,11 @@ export const pool = new Pool({
   password: env.DB_PASSWORD
 })
 
-pool.on("error", (err, client) => {
+pool.on("error", (err) => {
   logger.error(err, "Database pool error occurred")
   process.exit(1)
+})
+
+pool.on("connect", () => {
+  logger.info("Connected to database")
 })
