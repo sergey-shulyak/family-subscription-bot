@@ -1,4 +1,4 @@
-import R from "ramda"
+import isEmpty from "lodash/isEmpty"
 
 export const formatUsername = (username?: string): string =>
-  !R.isEmpty(username) ? `@${username}` : "unknown"
+  !isEmpty(username) ? `@${username}` : "unknown"
