@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   price FLOAT NOT NULL,
   price_per_member FLOAT NOT NULL,
   currency currency NOT NULL,
-  subscribers uuid[]
+  subscribers uuid[] DEFAULT [],
   PRIMARY KEY (id)
 );
 
@@ -29,6 +29,6 @@ CREATE TABLE IF NOT EXISTS payments (
   transaction_time TIMESTAMP,
   transaction_status transaction_status DEFAULT 'created',
   subscription_id uuid NOT NULL REFERENCES subsciptions(id),
-  subscriber_id uuid NOT NULL REFERENCES users(id)
+  subscriber_id uuid NOT NULL REFERENCES users(id),
   PRIMARY KEY (id)
 );

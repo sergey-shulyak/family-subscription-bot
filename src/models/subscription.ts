@@ -1,5 +1,4 @@
 import { pool } from "../db"
-import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
 
 enum Currency {
   UAH = "uah",
@@ -52,32 +51,26 @@ export class Subscription {
     this.subscribers = subscribers
   }
 
-  // public static async findByTelegramId(
-  //   tId: number
-  // ): Promise<Subscription | null> {
-  //   const result = await pool.query(
-  //     "SELECT * FROM users WHERE telegram_id = $1",
-  //     [tId]
-  //   )
-
-  //   if (result.rowCount === 0) {
-  //     return null
-  //   }
-
-  //   const userData = camelCaseKeys<SubscriptionProps>(result.rows[0])
-
-  //   return new Subscription(userData)
-  // }
-
-  // public static async create({
-  //   telegramId,
-  //   firstName,
-  //   lastName,
-  //   username
-  // }: SubscriptionProps): Promise<void> {
-  //   await pool.query(
-  //     "INSERT INTO users (telegram_id, first_name, last_name, username) VALUES ($1, $2, $3, $4)",
-  //     [telegramId, firstName, lastName, username]
-  //   )
-  // }
+  public static async create({
+    title,
+    ownerId,
+    ownerCard,
+    billingDate,
+    price,
+    pricePerMember,
+    currency
+  }: SubscriptionProps): Promise<void> {
+    await pool.query(
+      `INSERT INTO subscriptions (
+        title,
+        owner_id,
+        owner_card,
+        billing_date,
+        price,
+        price_per_member,
+        currency
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [title, ownerId, ownerCard, billingDate, price, pricePerMember, currency]
+    )
+  }
 }
