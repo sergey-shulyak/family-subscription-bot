@@ -12,7 +12,7 @@ CREATE TYPE currency AS ENUM ('uah', 'usd', 'eur');
 CREATE TABLE IF NOT EXISTS subscriptions (
   id uuid DEFAULT uuid_generate_v4(),
   title VARCHAR NOT NULL,
-  owner_id INT NOT NULL,
+  owner_id INT NOT NULL REFERENCES users(id),
   owner_card VARCHAR NOT NULL,
   billing_date TIMESTAMP NOT NULL,
   price FLOAT NOT NULL,
