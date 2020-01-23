@@ -1,7 +1,5 @@
 import { pool } from "../db"
 import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
-import logger from "../config/logger"
-import toJson from "../helpers/toJson"
 
 interface UserProps {
   id?: string

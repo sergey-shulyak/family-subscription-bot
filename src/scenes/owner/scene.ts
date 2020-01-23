@@ -33,9 +33,7 @@ ownerScene.enter(async (ctx) => {
     }
   }
 
-  return ctx.reply(userMessages.OWNER_HEADER, Extra.markup(ownerMenu))
+  return ctx.reply(userMessages.OWNER_HEADER, ownerMenu)
 })
-
-// greeter.action(/set_role/, setRole)
 
 export default ownerScene
