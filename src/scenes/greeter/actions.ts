@@ -28,10 +28,5 @@ export default async function setRole(
 
   logger.info(`User ${ctx.chat?.username} logged in as ${validRole}`)
 
-  // @ts-ignore
-  // ctx.s.role = validRole
-
-  ctx.scene.state = { x: "" }
-
   await ctx.scene.enter(roleToScene.get(validRole) as Scene)
 }
