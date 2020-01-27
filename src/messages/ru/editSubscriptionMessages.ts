@@ -1,4 +1,4 @@
-export default {
+const messages: { [key: string]: string } = {
   SUBSCRIPTION_ADD: "Создание подписки",
   SUBSCRIPTION_EDIT: "Изменение подписки",
 
@@ -19,5 +19,8 @@ export default {
   SUBSCRIPTION_BILLING_DATE_RESPONSE: "Напишите дату оплаты подписки",
   SUBSCRIPTION_CARD_NUMBER_RESPONSE:
     "Напишите номер карты для перевода средств",
-  SUBSCRIPTION_PROPERTY_CHANGED: "👍"
+  SUBSCRIPTION_PROPERTY_CHANGED: "👍",
+  SUBSCRIPTION_SUBMIT: "Готово"
 }
+
+export default messages

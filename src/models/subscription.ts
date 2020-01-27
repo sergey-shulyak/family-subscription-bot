@@ -1,4 +1,11 @@
 import { pool } from "../db"
+import {
+  IsString,
+  IsCreditCard,
+  IsDate,
+  IsNumber,
+  IsEnum
+} from "class-validator"
 
 enum Currency {
   UAH = "uah",
@@ -19,14 +26,29 @@ interface SubscriptionProps {
 }
 
 export class Subscription {
+  [key: string]: any
   id?: string
+
+  @IsString()
   title: string
+
   ownerId: string
+
+  @IsCreditCard()
   ownerCard: string
+
+  @IsDate()
   billingDate: Date
+
+  @IsNumber()
   price: number
+
+  @IsNumber()
   pricePerMember: number
+
+  @IsEnum(Currency)
   currency: Currency
+
   subscribers?: string[]
 
   constructor({

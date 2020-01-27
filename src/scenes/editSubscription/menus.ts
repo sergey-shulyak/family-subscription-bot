@@ -4,18 +4,19 @@ import editSubscriptionMessages from "../../messages/ru/editSubscriptionMessages
 
 export const editSubscriptionMenu = (state: Subscription): object =>
   Markup.keyboard([
-    `${editSubscriptionMessages.SUBSCRIPTION_TITLE}: ${state.title ?? "empty"}`,
-    `${editSubscriptionMessages.SUBSCRIPTION_PRICE}: ${state.price ?? "empty"}`,
+    `${editSubscriptionMessages.SUBSCRIPTION_TITLE}: ${state.title ?? "-"}`,
+    `${editSubscriptionMessages.SUBSCRIPTION_PRICE}: ${state.price ?? "-"}`,
     `${
       editSubscriptionMessages.SUBSCRIPTION_PER_MEMBER
-    }: ${state.pricePerMember ?? "empty"}`,
+    }: ${state.pricePerMember ?? "-"}`,
     `${editSubscriptionMessages.SUBSCRIPTION_CURRENCY}: ${state.currency ??
-      "empty"}`,
+      "-"}`,
     `${
       editSubscriptionMessages.SUBSCRIPTION_BILLING_DATE
-    }: ${state.billingDate ?? "empty"}`,
+    }: ${state.billingDate ?? "-"}`,
     `${editSubscriptionMessages.SUBSCRIPTION_CARD_NUMBER}: ${state.ownerCard ??
-      "empty"}`
+      "-"}`,
+    `${editSubscriptionMessages.SUBSCRIPTION_SUBMIT}`
   ])
     .resize()
     .extra()
