@@ -44,8 +44,8 @@ function shutDownGracefully(): void {
     .catch(logError("Failed to shutdown gracefully"))
 }
 
-process.on("SIGINT", shutDownGracefully)
-process.on("SIGTERM", shutDownGracefully)
+// process.on("SIGINT", shutDownGracefully)
+// process.on("SIGTERM", shutDownGracefully)
 
 startBot()
   .then(() => logger.info("Bot has started"))

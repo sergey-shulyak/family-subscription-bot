@@ -1,9 +1,8 @@
-import { BaseScene } from "telegraf"
+import { BaseScene, Stage } from "telegraf"
 import { ownerMenu } from "./menus"
 import { Scene } from "../sceneEnum"
 import { User } from "../../models/user"
 import ownerMessages from "../../messages/ru/ownerMessages"
-import { Subscription } from "../../models/subscription"
 
 const ownerScene = new BaseScene(Scene.Owner)
 
@@ -37,32 +36,31 @@ ownerScene.enter(async (ctx) => {
   return ctx.reply(ownerMessages.OWNER_HEADER, ownerMenu)
 })
 
-ownerScene.hears(ownerMessages.OWNER_ADD_SUBSCRIPTION, async (ctx) => {
+ownerScene.hears(
+  ownerMessages.OWNER_ADD_SUBSCRIPTION,
   // Show flow with subscription data
   // Save subscription to DB
   // Return to main menu or to subscription menu
 
-  const { id: currentUserId } = (ctx.scene.state as any).user as User
+  // const { id: currentUserId } = (ctx.scene.state as any).user as User
 
-  ctx.scene.state = {
-    ...ctx.scene.state,
-    subscription: {
-      title: "",
-      ownerId: currentUserId,
-      ownerCard: "",
-      billingDate: null,
-      price: 0,
-      pricePerMember: 0,
-      currency: "usd"
-    }
-  }
+  // ctx.scene.state = {
+  //   ...ctx.scene.state,
+  //   subscription: {
+  //     title: "",
+  //     ownerId: currentUserId,
+  //     ownerCard: "",
+  //     billingDate: null,
+  //     price: 0,
+  //     pricePerMember: 0,
+  //     currency: "usd"
+  //   }
+  // }
 
-  const subscription: Subscription = (ctx.scene.state as any).subscription
+  // const subscription: Subscription = (ctx.scene.state as any).subscription
+  // const user = (ctx.scene as any).user as User
 
-  return ctx.scene.enter(Scene.EditSubscription, {
-    isEdit: false,
-    subscription
-  })
-})
+  Stage.enter(Scene.EditSubscription)
+)
 
 export default ownerScene

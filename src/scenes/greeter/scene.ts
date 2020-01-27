@@ -1,4 +1,4 @@
-import { BaseScene } from "telegraf"
+import { BaseScene, Stage } from "telegraf"
 import { greeterMenu } from "./menus"
 import greeterMessages from "../../messages/ru/greeterMessages"
 import { Scene } from "../sceneEnum"
@@ -9,8 +9,9 @@ greeterScene.enter(async (ctx) =>
   ctx.reply(greeterMessages.GREETING_HEADER, greeterMenu)
 )
 
-greeterScene.hears(greeterMessages.GREETING_ROLE_OWNER, async (ctx) =>
-  ctx.scene.enter(Scene.Owner)
+greeterScene.hears(
+  greeterMessages.GREETING_ROLE_OWNER,
+  Stage.enter(Scene.Owner)
 )
 
 export default greeterScene

@@ -1,5 +1,5 @@
 import mapKeys from "lodash/mapKeys"
-import camelCase from "lodash/camelCase"
+import { camelCase } from "change-case"
 
 const mapKeyToCamelCase = (value: any, key: string): string => camelCase(key)
 

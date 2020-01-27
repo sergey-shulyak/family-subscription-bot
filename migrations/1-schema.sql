@@ -12,7 +12,7 @@ CREATE TYPE currency AS ENUM ('uah', 'usd', 'eur');
 CREATE TABLE IF NOT EXISTS subscriptions (
   id uuid DEFAULT uuid_generate_v4(),
   title VARCHAR NOT NULL,
-  owner_id INT NOT NULL REFERENCES users(id),
+  owner_id uuid NOT NULL REFERENCES users(id),
   owner_card VARCHAR NOT NULL,
   billing_date TIMESTAMP NOT NULL,
   price FLOAT NOT NULL,
@@ -22,13 +22,13 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   PRIMARY KEY (id)
 );
 
-CREATE TYPE transaction_status AS ENUM('created', 'in_progress', 'successful', 'failed')
+CREATE TYPE transaction_status AS ENUM('created', 'in_progress', 'successful', 'failed');
 
 CREATE TABLE IF NOT EXISTS payments (
   id uuid DEFAULT uuid_generate_v4(),
   transaction_time TIMESTAMP,
   transaction_status transaction_status DEFAULT 'created',
-  subscription_id uuid NOT NULL REFERENCES subsciptions(id),
+  subscription_id uuid NOT NULL REFERENCES subscriptions(id),
   subscriber_id uuid NOT NULL REFERENCES users(id),
   PRIMARY KEY (id)
 );

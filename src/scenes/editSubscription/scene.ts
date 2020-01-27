@@ -1,45 +1,48 @@
-import { BaseScene } from "telegraf"
+import { BaseScene, Stage } from "telegraf"
 import { editSubscriptionMenu } from "./menus"
 import { Scene } from "../sceneEnum"
 import { User } from "../../models/user"
 import { Subscription } from "../../models/subscription"
 import editSubscriptionMessages from "../../messages/ru/editSubscriptionMessages"
 import { validate } from "class-validator"
+import { constantCase } from "change-case"
+import logger from "../../config/logger"
 
 // TODO: Refactor the mess here
 
 interface EditSubscriptionSceneState {
   isEdit: boolean
   subscription: Subscription
+  user: User
   field: string | null
 }
 
 const propertiesRegexps = {
   title: new RegExp(editSubscriptionMessages.SUBSCRIPTION_TITLE),
   price: new RegExp(editSubscriptionMessages.SUBSCRIPTION_PRICE),
-  pricePerMember: new RegExp(editSubscriptionMessages.SUBSCRIPTION_PER_MEMBER),
+  pricePerMember: new RegExp(
+    editSubscriptionMessages.SUBSCRIPTION_PRICE_PER_MEMBER
+  ),
   currency: new RegExp(editSubscriptionMessages.SUBSCRIPTION_CURRENCY),
   billingDate: new RegExp(editSubscriptionMessages.SUBSCRIPTION_BILLING_DATE),
-  ownerCard: new RegExp(editSubscriptionMessages.SUBSCRIPTION_CARD_NUMBER)
+  ownerCard: new RegExp(editSubscriptionMessages.SUBSCRIPTION_OWNER_CARD)
 }
 
 const editSubscriptionScene = new BaseScene(Scene.EditSubscription)
 
 editSubscriptionScene.enter(async (ctx) => {
-  const { id: currentUserId } = (ctx.scene.state as any).user as User
-
   ctx.scene.state = {
     isEdit: false,
+    field: null,
     subscription: {
       title: "",
-      ownerId: currentUserId,
+      ownerId: null,
       ownerCard: "",
       billingDate: null,
       price: 0,
       pricePerMember: 0,
       currency: "usd"
-    },
-    field: null
+    }
   }
 
   const state = ctx.scene.state as EditSubscriptionSceneState
@@ -72,21 +75,75 @@ Object.entries(propertiesRegexps).forEach(([property, regexp]) => {
       field: property
     }
 
+    // TODO: Add currency inline menu?
+    // if (property === "currency") {
+    //   return ctx.reply(
+    //     `SUBSCRIPTION_${constantCase(property)}_RESPONSE`,
+    //     editSubscriptionMenu(state.subscription)
+    //   )
+    // }
+
     return ctx.reply(
-      editSubscriptionMessages[
-        `SUBSCRIPTION_${property.toUpperCase()}_RESPONSE`
+      (editSubscriptionMessages as { [key: string]: string })[
+        `SUBSCRIPTION_${constantCase(property)}_RESPONSE`
       ]
     )
   })
 })
 
-editSubscriptionScene.on("text", async (ctx) => {
+editSubscriptionScene.hears(
+  editSubscriptionMessages.SUBSCRIPTION_SAVE,
+  async (ctx) => {
+    const state = ctx.scene.state as EditSubscriptionSceneState
+
+    const subscriptionProps = {
+      ...state.subscription,
+      billingDate: new Date(state.subscription.billingDate),
+      price: Number(state.subscription.price),
+      pricePerMember: Number(state.subscription.pricePerMember)
+    }
+
+    const subscription = new Subscription(subscriptionProps)
+
+    await validate(subscription)
+
+    if (ctx.from?.id === undefined) {
+      return
+    }
+
+    const subscriptionOwner = await User.findByTelegramId(ctx.from?.id)
+
+    if (subscriptionOwner === null) {
+      return
+    }
+
+    subscription.ownerId = subscriptionOwner.id as string
+
+    const entity = new Subscription(subscription)
+    await Subscription.create(entity)
+
+    return ctx.reply(editSubscriptionMessages.SUBSCRIPTION_SAVE_RESPONSE)
+  }
+)
+
+editSubscriptionScene.hears(
+  editSubscriptionMessages.SUBSCRIPTION_CANCEL,
+  Stage.enter(Scene.Owner)
+)
+
+editSubscriptionScene.on("text", async (ctx, next) => {
   const state = ctx.scene.state as EditSubscriptionSceneState
 
-  if (state.field === null) return
+  logger.debug("next", next?.toString())
 
-  await ctx.reply(JSON.stringify(state, null, 2))
-  await ctx.reply(JSON.stringify(ctx.message, null, 2))
+  if (state.field === null && next !== undefined) {
+    await next()
+    return
+  }
+
+  if (state.field === null) {
+    return
+  }
 
   state.subscription[state.field] = ctx.message?.text
   state.field = null
@@ -96,18 +153,5 @@ editSubscriptionScene.on("text", async (ctx) => {
     editSubscriptionMenu(state.subscription)
   )
 })
-
-editSubscriptionScene.hears(
-  editSubscriptionMessages.SUBSCRIPTION_SUBMIT,
-  async (ctx) => {
-    const subscription: Subscription = (ctx.scene
-      .state as EditSubscriptionSceneState).subscription
-
-    await validate(subscription)
-
-    const entity = new Subscription(subscription)
-    await Subscription.create(entity)
-  }
-)
 
 export default editSubscriptionScene
