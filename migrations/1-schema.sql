@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   price FLOAT NOT NULL,
   price_per_member FLOAT NOT NULL,
   currency currency NOT NULL,
-  subscribers uuid[] DEFAULT [],
+  subscribers uuid[],
   PRIMARY KEY (id)
 );
 

@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsEnum
 } from "class-validator"
+import { mapDbNames } from "../helpers/dbNameMapper"
 
 enum Currency {
   UAH = "uah",
@@ -94,5 +95,23 @@ export class Subscription {
       ) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [title, ownerId, ownerCard, billingDate, price, pricePerMember, currency]
     )
+  }
+
+  public static async findAllByOwnerId(
+    ownerId: string
+  ): Promise<Subscription[]> {
+    const entries = await pool.query(
+      "SELECT * FROM subscriptions WHERE owner_id = $1",
+      [ownerId]
+    )
+
+    if (entries.rowCount === 0) {
+      return []
+    }
+
+    return entries.rows.map((row) => {
+      const mappedProps = mapDbNames<SubscriptionProps>(row)
+      return new Subscription(mappedProps)
+    })
   }
 }

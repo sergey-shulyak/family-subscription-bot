@@ -19,6 +19,7 @@
     "class-validator": "^0.11.0",
     "dotenv-safe": "^8.2.0",
     "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "pg": "^7.17.1",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",

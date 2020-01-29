@@ -7,6 +7,7 @@ import editSubscriptionMessages from "../../messages/ru/editSubscriptionMessages
 import { validate } from "class-validator"
 import { constantCase } from "change-case"
 import logger from "../../config/logger"
+import moment from "moment"
 
 // TODO: Refactor the mess here
 
@@ -98,7 +99,10 @@ editSubscriptionScene.hears(
 
     const subscriptionProps = {
       ...state.subscription,
-      billingDate: new Date(state.subscription.billingDate),
+      billingDate: moment(
+        state.subscription.billingDate,
+        "DD.MM.YYYY"
+      ).toDate(),
       price: Number(state.subscription.price),
       pricePerMember: Number(state.subscription.pricePerMember)
     }
@@ -122,7 +126,9 @@ editSubscriptionScene.hears(
     const entity = new Subscription(subscription)
     await Subscription.create(entity)
 
-    return ctx.reply(editSubscriptionMessages.SUBSCRIPTION_SAVE_RESPONSE)
+    await ctx.reply(editSubscriptionMessages.SUBSCRIPTION_SAVE_RESPONSE)
+
+    return ctx.scene.enter(Scene.Owner)
   }
 )
 

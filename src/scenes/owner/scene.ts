@@ -38,29 +38,14 @@ ownerScene.enter(async (ctx) => {
 
 ownerScene.hears(
   ownerMessages.OWNER_ADD_SUBSCRIPTION,
-  // Show flow with subscription data
-  // Save subscription to DB
-  // Return to main menu or to subscription menu
-
-  // const { id: currentUserId } = (ctx.scene.state as any).user as User
-
-  // ctx.scene.state = {
-  //   ...ctx.scene.state,
-  //   subscription: {
-  //     title: "",
-  //     ownerId: currentUserId,
-  //     ownerCard: "",
-  //     billingDate: null,
-  //     price: 0,
-  //     pricePerMember: 0,
-  //     currency: "usd"
-  //   }
-  // }
-
-  // const subscription: Subscription = (ctx.scene.state as any).subscription
-  // const user = (ctx.scene as any).user as User
-
   Stage.enter(Scene.EditSubscription)
 )
+
+ownerScene.hears(
+  ownerMessages.OWNER_SUBSCRIPTION_LIST,
+  Stage.enter(Scene.SubscriptionList)
+)
+
+ownerScene.hears(ownerMessages.OWNER_LOGOUT, Stage.enter(Scene.Greeter))
 
 export default ownerScene
