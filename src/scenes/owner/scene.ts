@@ -2,15 +2,11 @@ import { BaseScene, Stage } from "telegraf"
 import { ownerMenu } from "./menus"
 import { Scene } from "../sceneEnum"
 import { User } from "../../models/user"
-import ownerMessages from "../../messages/ru/ownerMessages"
+import { i18n } from "../../middlewares"
 
 const ownerScene = new BaseScene(Scene.Owner)
 
 ownerScene.enter(async (ctx) => {
-  // Check if owner have registered subscriptions
-  // if yes - show main menu
-  // if no - show add new subscription
-
   if (ctx.from?.id !== undefined) {
     const user = ctx.from
 
@@ -33,19 +29,19 @@ ownerScene.enter(async (ctx) => {
     }
   }
 
-  return ctx.reply(ownerMessages.OWNER_HEADER, ownerMenu)
+  return ctx.reply(ctx.i18n.t("OWNER.HEADER"), ownerMenu(ctx))
 })
 
 ownerScene.hears(
-  ownerMessages.OWNER_ADD_SUBSCRIPTION,
+  i18n.t("OWNER.ADD_SUBSCRIPTION"),
   Stage.enter(Scene.EditSubscription)
 )
 
 ownerScene.hears(
-  ownerMessages.OWNER_SUBSCRIPTION_LIST,
+  i18n.t("OWNER.SUBSCRIPTION_LIST"),
   Stage.enter(Scene.SubscriptionList)
 )
 
-ownerScene.hears(ownerMessages.OWNER_LOGOUT, Stage.enter(Scene.Greeter))
+ownerScene.hears(i18n.t("OWNER.LOGOUT"), Stage.enter(Scene.Greeter))
 
 export default ownerScene

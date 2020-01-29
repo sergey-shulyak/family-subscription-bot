@@ -1,23 +1,31 @@
-import { Markup } from "telegraf"
+import { Markup, SceneContextMessageUpdate } from "telegraf"
 import { Subscription } from "../../models/subscription"
-import messages from "../../messages/ru/subscriptionListMessages"
 
-export const subscriptionListMenu = (subscriptions: Subscription[]): object =>
+export const subscriptionListMenu = (
+  ctx: SceneContextMessageUpdate,
+  subscriptions: Subscription[]
+): object =>
   Markup.keyboard([
     ...subscriptions.map(
       (subscription, index) => `${index + 1}. ${subscription.title}`
     ),
-    messages.BACK
+    ctx.i18n.t("SUBSCRIPTION_LIST.BACK")
   ])
     .resize()
     .extra()
 
 // export const subscriptionList = (subscriptions: Subscription[]) =>
-export const subscriptionMenu = (subscription: Subscription): object =>
+export const subscriptionMenu = (
+  ctx: SceneContextMessageUpdate,
+  subscription: Subscription
+): object =>
   Markup.keyboard([
-    [messages.INFO, messages.EDIT],
-    [messages.DEBTORS],
-    [messages.BACK]
+    [
+      ctx.i18n.t("SUBSCRIPTION_LIST.INFO"),
+      ctx.i18n.t("SUBSCRIPTION_LIST.EDIT")
+    ],
+    [ctx.i18n.t("SUBSCRIPTION_LIST.DEBTORS")],
+    [ctx.i18n.t("SUBSCRIPTION_LIST.BACK")]
   ])
     .resize()
     .extra()

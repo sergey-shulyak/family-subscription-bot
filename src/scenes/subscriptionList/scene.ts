@@ -2,16 +2,34 @@ import { BaseScene, Stage } from "telegraf"
 import { Scene } from "../sceneEnum"
 import { Subscription } from "../../models/subscription"
 import { subscriptionListMenu, subscriptionMenu } from "./menus"
-import messages from "../../messages/ru/subscriptionListMessages"
 import { User } from "../../models/user"
 import logger from "../../config/logger"
+import currencyMap from "../../common/currencyMap"
+import { i18n } from "../../middlewares"
+import moment from "moment"
 
 // TODO: Refactor the mess here
+
+// const subscriptionDescription = (subscription: Subscription): string =>
+//   `${subscription.title}
+// 🗓 Дата оплаты: ${moment(subscription.billingDate).format("DD.MM")}
+// 🏷 Ежемесячная стоимость: ${subscription.price}${
+//     currencyMap[subscription.currency]
+//   }
+// 👩‍👩‍👧‍👦 Стоимость для участника: ${subscription.pricePerMember}${
+//     currencyMap[subscription.currency]
+//   }`
 
 interface SubscriptionListSceneState {
   subscriptions: Subscription[]
   selectedSubscriptionId: string | null
 }
+
+const descriptionProps = (subscription: Subscription): object => ({
+  ...subscription,
+  billingDate: moment(subscription.billingDate).format("DD.MM"),
+  currencySymbol: currencyMap[subscription.currency]
+})
 
 const subscriptionListScene = new BaseScene(Scene.SubscriptionList)
 
@@ -50,8 +68,11 @@ subscriptionListScene.enter(async (ctx) => {
       state.selectedSubscriptionId = subscription.id
 
       return ctx.reply(
-        messages.subscriptionDescription(subscription),
-        subscriptionMenu(subscription)
+        ctx.i18n.t(
+          "SUBSCRIPTION_LIST.DESCRIPTION",
+          descriptionProps(subscription)
+        ),
+        subscriptionMenu(ctx, subscription)
       )
     })
   })
@@ -68,12 +89,12 @@ subscriptionListScene.enter(async (ctx) => {
   ])
 
   return ctx.reply(
-    messages.SELECT_SUB_TO_VIEW_DETAILS,
-    subscriptionListMenu(subscriptions)
+    ctx.i18n.t("SUBSCRIPTION_LIST.SELECT_SUB_TO_VIEW_DETAILS"),
+    subscriptionListMenu(ctx, subscriptions)
   )
 })
 
-subscriptionListScene.hears(messages.INFO, async (ctx) => {
+subscriptionListScene.hears(i18n.t("SUBSCRIPTION_LIST.INFO"), async (ctx) => {
   const state = ctx.scene.state as SubscriptionListSceneState
   const currentSubscription = state.subscriptions.find(
     (sub) => sub.id === state.selectedSubscriptionId
@@ -85,11 +106,17 @@ subscriptionListScene.hears(messages.INFO, async (ctx) => {
   }
 
   return ctx.reply(
-    messages.subscriptionDescription(currentSubscription),
-    subscriptionMenu(currentSubscription)
+    ctx.i18n.t(
+      "SUBSCRIPTION_LIST.DESCRIPTION",
+      descriptionProps(currentSubscription)
+    ),
+    subscriptionMenu(ctx, currentSubscription)
   )
 })
 
-subscriptionListScene.hears(messages.BACK, Stage.enter(Scene.Owner))
+subscriptionListScene.hears(
+  i18n.t("SUBSCRIPTION_LIST.BACK"),
+  Stage.enter(Scene.Owner)
+)
 
 export default subscriptionListScene

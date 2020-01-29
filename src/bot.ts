@@ -4,7 +4,6 @@ import logger from "./config/logger"
 import env from "./config/env"
 import { Bot } from "./types"
 import { configureCommands } from "./commands"
-import { helpMessage } from "./messages/ru/help"
 import configureMiddlewares from "./middlewares"
 import { Scene } from "./scenes/sceneEnum"
 import { pool } from "./db"
@@ -20,7 +19,7 @@ function createAndConfigureBot(): Bot {
     (ctx as SceneContextMessageUpdate).scene.enter(Scene.Greeter)
   )
 
-  bot.help(async (ctx) => ctx.reply(helpMessage))
+  bot.help(async (ctx) => ctx.reply(ctx.i18n.t("HELP")))
 
   configureCommands(bot)
 

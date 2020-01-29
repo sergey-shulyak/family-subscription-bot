@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node build/index.js | pino-pretty",
     "start:dev": "nodemon",
-    "debug": "node -r ts-node/register src/server.ts | pino-pretty",
+    "debug": "node --inspect-brk -r ts-node/register src/server.ts | pino-pretty",
     "tsc": "tsc",
     "lint": "eslint --ext ts src/**"
   },
@@ -24,6 +24,7 @@
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",
     "telegraf": "^3.35.0",
+    "telegraf-i18n": "^6.6.0",
     "telegraf-session-redis": "^5.1.0"
   },
   "devDependencies": {

@@ -1,10 +1,10 @@
-import { Markup } from "telegraf"
-import greeterMessages from "../../messages/ru/greeterMessages"
+import { Markup, SceneContextMessageUpdate } from "telegraf"
 
-export const greeterMenu = Markup.keyboard([
-  greeterMessages.GREETING_ROLE_USER,
-  greeterMessages.GREETING_ROLE_OWNER
-])
-  .oneTime()
-  .resize()
-  .extra()
+export const greeterMenu = (ctx: SceneContextMessageUpdate): object =>
+  Markup.keyboard([
+    ctx.i18n.t("GREETER.ROLE_USER"),
+    ctx.i18n.t("GREETER.ROLE_OWNER")
+  ])
+    .oneTime()
+    .resize()
+    .extra()
