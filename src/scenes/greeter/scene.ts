@@ -14,4 +14,9 @@ greeterScene.hears(
   Stage.enter(Scene.Owner)
 )
 
+greeterScene.hears(
+  greeterMessages.GREETING_ROLE_SUBSCRIBER,
+  Stage.enter(Scene.Subscriber)
+)
+
 export default greeterScene

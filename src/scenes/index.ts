@@ -1,11 +1,13 @@
 import greeterScene from "./greeter"
 import ownerScene from "./owner"
-import editSubscription from "./editSubscription"
-import subscriptionList from "./subscriptionList"
+import subscriberScene from "./subscriber"
+import editSubscriptionScene from "./editSubscription"
+import subscriptionListScene from "./subscriptionList"
 
 export const scenes = [
   greeterScene,
   ownerScene,
-  subscriptionList,
-  editSubscription
+  subscriberScene,
+  subscriptionListScene,
+  editSubscriptionScene
 ]

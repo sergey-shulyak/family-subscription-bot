@@ -7,4 +7,5 @@ export const ownerMenu = Markup.keyboard([
   [ownerMessages.OWNER_LOGOUT, ownerMessages.OWNER_SETTINGS]
 ])
   .resize()
+  .oneTime()
   .extra()

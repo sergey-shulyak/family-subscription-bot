@@ -6,18 +6,18 @@ export default {
   // Main menu
   SUBSCRIPTION_LIST_HEADER: "Вот список ваших подписок",
   SELECT_SUB_TO_VIEW_DETAILS: "Выберите подписку из меню",
-  BACK: "🔙 Назад",
+  BACK: "Назад",
   INFO: "Детали",
   EDIT: "Изменить",
   DEBTORS: "Список должников",
   subscriptionDescription(subscription: Subscription) {
-    return `${subscription.title}
-🗓 Дата оплаты: ${moment(subscription.billingDate).format("DD.MM")}
-🏷 Ежемесячная стоимость: ${subscription.price}${
+    return `<b>${subscription.title}</b> (${subscription.id?.split("-")[0]})
+🗓 Дата оплаты: <b>${moment(subscription.billingDate).format("DD.MM")}</b>
+🏷 Ежемесячная стоимость: <b>${subscription.price}${
       currencyMap[subscription.currency]
-    }
-👩‍👩‍👧‍👦 Стоимость для участника: ${subscription.pricePerMember}${
+    }</b>
+👩‍👩‍👧‍👦 Стоимость для участника: <b>${subscription.pricePerMember}${
       currencyMap[subscription.currency]
-    }`
+    }</b>`
   }
 }

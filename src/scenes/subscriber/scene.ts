@@ -13,7 +13,7 @@ interface SubscriptionListSceneState {
   selectedSubscriptionId: string | null
 }
 
-const subscriptionListScene = new BaseScene(Scene.SubscriptionList)
+const subscriptionListScene = new BaseScene(Scene.Subscriber)
 
 subscriptionListScene.enter(async (ctx) => {
   ctx.scene.state = {
