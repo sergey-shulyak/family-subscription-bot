@@ -6,7 +6,7 @@ import {
 } from "telegraf"
 import RedisSession from "telegraf-session-redis"
 
-import { scenes } from "../scenes"
+import scenes from "../scenes"
 import { Bot } from "../types"
 
 export let session: RedisSession

@@ -1,95 +1,122 @@
 import { BaseScene, Stage } from "telegraf"
+import { subscriberMenu, addSubscriptionConfirmMenu } from "./menus"
 import { Scene } from "../sceneEnum"
-import { Subscription } from "../../models/subscription"
-import { subscriptionListMenu, subscriptionMenu } from "./menus"
-import messages from "../../messages/ru/subscriptionListMessages"
 import { User } from "../../models/user"
+import messages from "../../messages/ru/subscriberMessages"
 import logger from "../../config/logger"
+import { Subscription } from "../../models/subscription"
 
-// TODO: Refactor the mess here
-
-interface SubscriptionListSceneState {
-  subscriptions: Subscription[]
-  selectedSubscriptionId: string | null
+interface SubscriberSceneState {
+  user: User | null
+  subscription: Subscription | null
+  isAddingSubscription: boolean
 }
 
-const subscriptionListScene = new BaseScene(Scene.Subscriber)
+const subscriberScene = new BaseScene(Scene.Subscriber)
 
-subscriptionListScene.enter(async (ctx) => {
+subscriberScene.enter(async (ctx) => {
   ctx.scene.state = {
-    subscriptions: [],
-    selectedSubscriptionId: null
+    user: null,
+    isAddingSubscription: false
   }
 
-  const state = ctx.scene.state as SubscriptionListSceneState
+  if (ctx.from?.id !== undefined) {
+    const user = ctx.from
 
-  if (ctx.from === undefined) {
-    logger.error("Unable to get current user id")
-    return
+    const existingUser = await User.findByTelegramId(user.id)
+
+    if (existingUser === null) {
+      await User.create({
+        telegramId: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        username: user.username
+      })
+    }
+
+    ctx.scene.state = {
+      user:
+        existingUser !== undefined
+          ? existingUser
+          : await User.findByTelegramId(user.id)
+    }
   }
 
-  const user = await User.findByTelegramId(ctx.from?.id)
-
-  if (user === null || user.id === undefined) {
-    logger.error("No existing user current user id")
-    return
-  }
-
-  const subscriptions = await Subscription.findAllByOwnerId(user.id)
-  state.subscriptions = subscriptions
-
-  subscriptions.forEach((subscription) => {
-    subscriptionListScene.hears(new RegExp(subscription.title), async (ctx) => {
-      if (subscription.id === undefined) {
-        logger.error("No subscription id is present in item handler")
-        return
-      }
-
-      const state = ctx.scene.state as SubscriptionListSceneState
-
-      state.selectedSubscriptionId = subscription.id
-
-      return ctx.replyWithHTML(
-        messages.subscriptionDescription(subscription),
-        subscriptionMenu(subscription)
-      )
-    })
-  })
-
-  await ctx.reply("Ваши подписки")
-  await Promise.all([
-    subscriptions.map(async (subscription, index) =>
-      ctx.reply(
-        `${index + 1}. ${subscription.title} (${
-          subscription.id?.split("-")[0]
-        })`
-      )
-    )
-  ])
-
-  return ctx.reply(
-    messages.SELECT_SUB_TO_VIEW_DETAILS,
-    subscriptionListMenu(subscriptions)
-  )
+  return ctx.reply(messages.HEADER, subscriberMenu)
 })
 
-subscriptionListScene.hears(messages.INFO, async (ctx) => {
-  const state = ctx.scene.state as SubscriptionListSceneState
-  const currentSubscription = state.subscriptions.find(
-    (sub) => sub.id === state.selectedSubscriptionId
-  )
+subscriberScene.hears(messages.ADD_SUBSCRIPTION, async (ctx) => {
+  const state = ctx.scene.state as SubscriberSceneState
+  state.isAddingSubscription = true
 
-  if (currentSubscription === undefined) {
-    logger.error("No subscription present in scene state")
+  return ctx.reply(messages.WRITE_SUBSCRIPTION_ID)
+})
+
+subscriberScene.on("text", async (ctx) => {
+  const state = ctx.scene.state as SubscriberSceneState
+
+  if (!state.isAddingSubscription) {
     return
   }
+
+  const subscriptionId = ctx.message?.text
+
+  if (subscriptionId === undefined) {
+    logger.error("No id provided")
+    return ctx.reply("No subscription id")
+  }
+
+  const subscription = await Subscription.findByPartialId(subscriptionId)
+  state.subscription = subscription
+
+  if (subscription === null) {
+    return ctx.reply(messages.NO_SUBSCRIPTION_FOUND)
+  }
+
+  const owner = await User.findById(subscription.ownerId)
 
   return ctx.replyWithHTML(
-    messages.subscriptionDescription(currentSubscription),
-    subscriptionMenu(currentSubscription)
+    messages.subscriptionConfirmationInfo({
+      subscriptionTitle: subscription.title,
+      ownerUsername: owner?.username ?? `${owner?.firstName} ${owner?.lastName}`
+    }),
+    addSubscriptionConfirmMenu
   )
 })
 
-subscriptionListScene.hears(messages.BACK, Stage.enter(Scene.Owner))
+subscriberScene.hears(messages.CONFIRM, async (ctx) => {
+  const state = ctx.scene.state as SubscriberSceneState
 
-export default subscriptionListScene
+  if (state.subscription?.id === undefined) {
+    logger.error("Subscription id to add new subscriber to is empty")
+    return
+  }
+
+  if (state.user?.id === undefined) {
+    logger.error("Current user id to subscribe is empty")
+    return
+  }
+
+  await Subscription.addSubscriber(state.subscription?.id, state.user?.id)
+  state.isAddingSubscription = false
+
+  state.subscription = null
+
+  return ctx.reply(messages.SUBSCRIPTION_SUBMITTED, subscriberMenu)
+})
+
+subscriberScene.hears(messages.CANCEL, async (ctx) => {
+  const state = ctx.scene.state as SubscriberSceneState
+  state.subscription = null
+
+  return ctx.reply("", subscriberMenu)
+})
+
+subscriberScene.hears(
+  messages.SUBSCRIPTION_LIST,
+  Stage.enter(Scene.SubscriberSubscriptionList)
+)
+
+subscriberScene.hears(messages.LOGOUT, Stage.enter(Scene.Greeter))
+
+export default subscriberScene

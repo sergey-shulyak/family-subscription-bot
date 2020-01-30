@@ -1,13 +1,16 @@
-import greeterScene from "./greeter"
-import ownerScene from "./owner"
-import subscriberScene from "./subscriber"
-import editSubscriptionScene from "./editSubscription"
-import subscriptionListScene from "./subscriptionList"
+import greeter from "./greeter"
+import owner from "./owner"
+import subscriber from "./subscriber"
+import editSubscription from "./editSubscription"
+import subscriptionList from "./subscriptionList"
+import subscriberSubscriptionList from "./subscriberSubscriptionList"
 
-export const scenes = [
-  greeterScene,
-  ownerScene,
-  subscriberScene,
-  subscriptionListScene,
-  editSubscriptionScene
+export default [
+  greeter,
+  owner,
+  editSubscription,
+  subscriptionList,
+
+  subscriber,
+  subscriberSubscriptionList
 ]

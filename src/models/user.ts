@@ -39,6 +39,18 @@ export class User {
     return new User(userData)
   }
 
+  public static async findById(id: string): Promise<User | null> {
+    const result = await pool.query("SELECT * FROM users WHERE id = $1", [id])
+
+    if (result.rowCount === 0) {
+      return null
+    }
+
+    const userData = camelCaseKeys<UserProps>(result.rows[0])
+
+    return new User(userData)
+  }
+
   public static async create({
     telegramId,
     firstName,

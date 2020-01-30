@@ -1,25 +1,19 @@
 import { Markup } from "telegraf"
-import { Subscription } from "../../models/subscription"
-import messages from "../../messages/ru/subscriptionListMessages"
+import messages from "../../messages/ru/subscriberMessages"
 
-export const subscriptionListMenu = (subscriptions: Subscription[]): object =>
-  Markup.keyboard([
-    ...subscriptions.map(
-      (subscription, index) => `${index + 1}. ${subscription.title}`
-    ),
-    messages.BACK
-  ])
-    .resize()
-    .oneTime()
-    .extra()
+export const subscriberMenu = Markup.keyboard([
+  [messages.ADD_SUBSCRIPTION],
+  [messages.SUBSCRIPTION_LIST],
+  [messages.LOGOUT]
+])
+  .resize()
+  .oneTime()
+  .extra()
 
-// export const subscriptionList = (subscriptions: Subscription[]) =>
-export const subscriptionMenu = (subscription: Subscription): object =>
-  Markup.keyboard([
-    [messages.INFO, messages.EDIT],
-    [messages.DEBTORS],
-    [messages.BACK]
-  ])
-    .resize()
-    .oneTime()
-    .extra()
+export const addSubscriptionConfirmMenu = Markup.keyboard([
+  [messages.CONFIRM],
+  [messages.CANCEL]
+])
+  .resize()
+  .oneTime()
+  .extra()

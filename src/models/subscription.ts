@@ -114,4 +114,48 @@ export class Subscription {
       return new Subscription(mappedProps)
     })
   }
+
+  public static async findAllBySubscriberId(
+    subscriberId: string
+  ): Promise<Subscription[]> {
+    const entries = await pool.query(
+      "SELECT * FROM subscriptions WHERE $1 = ANY (subscribers)",
+      [subscriberId]
+    )
+
+    if (entries.rowCount === 0) {
+      return []
+    }
+
+    return entries.rows.map((row) => {
+      const mappedProps = mapDbNames<SubscriptionProps>(row)
+      return new Subscription(mappedProps)
+    })
+  }
+
+  public static async findByPartialId(
+    subscriptionPartialId: string
+  ): Promise<Subscription | null> {
+    const entries = await pool.query(
+      "SELECT * FROM subscriptions WHERE id::text LIKE '$1-%'",
+      [subscriptionPartialId]
+    )
+
+    if (entries.rowCount === 0) {
+      return null
+    }
+
+    const mappedProps = mapDbNames<SubscriptionProps>(entries.rows[0])
+    return new Subscription(mappedProps)
+  }
+
+  public static async addSubscriber(
+    subscriptionId: string,
+    subscriberId: string
+  ): Promise<void> {
+    await pool.query(
+      "UPDATE subscriptions SET subscribers = subscribers || $1 WHERE id = $2",
+      [subscriberId, subscriptionId]
+    )
+  }
 }

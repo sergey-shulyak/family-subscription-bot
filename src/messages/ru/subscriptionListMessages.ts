@@ -10,6 +10,7 @@ export default {
   INFO: "Детали",
   EDIT: "Изменить",
   DEBTORS: "Список должников",
+  LEAVE: "Отписаться",
   subscriptionDescription(subscription: Subscription) {
     return `<b>${subscription.title}</b> (${subscription.id?.split("-")[0]})
 🗓 Дата оплаты: <b>${moment(subscription.billingDate).format("DD.MM")}</b>
