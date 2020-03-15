@@ -1,4 +1,4 @@
-import { Bot } from "../types"
+import { Bot } from "../types/bot"
 import commands from "./commands"
 import { Middleware, ContextMessageUpdate } from "telegraf"
 

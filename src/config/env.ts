@@ -15,6 +15,11 @@ interface AppConfig {
   SUBSCRIPTION_CURRENCY: string
   SUBSCRIPTION_BILLING_DATE: Date
 
+  PAYMENT_CURRENCY: string
+
+  FIXER_API_KEY: string
+  FIXER_API_URL: string
+
   DB_HOST: string
   DB_PORT: number
   DB_DATABASE: string

@@ -16,12 +16,14 @@
     "lint": "eslint --ext ts src/**"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "change-case": "^4.1.1",
     "class-validator": "^0.11.0",
     "dotenv-safe": "^8.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "node-pg-migrate": "^4.2.2",
+    "nodejs-currency-converter": "^1.0.2",
     "pg": "^7.17.1",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",

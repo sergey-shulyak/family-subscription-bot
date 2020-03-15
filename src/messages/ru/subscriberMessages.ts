@@ -5,7 +5,10 @@ import { SubscriberPaymentInfo } from "../../services/paymentService"
 import moment = require("moment")
 
 export default {
-  SUBSCRIBER_HEADER: `Текущая подписка: *${env.SUBSCRIPTION_TITLE}*`,
+  subscriberHeader: (firstName: string) => `
+*Привет, ${firstName}*
+Текущая подписка: *${env.SUBSCRIPTION_TITLE}*
+`,
   SUBSCRIBER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
   subscriptionInfo: (adminInfo: User) => `
 *Подписка*: ${env.SUBSCRIPTION_TITLE}

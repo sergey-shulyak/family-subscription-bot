@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/camelcase */
 import { MigrationBuilder, ColumnDefinitions } from "node-pg-migrate"
 

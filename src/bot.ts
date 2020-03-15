@@ -2,7 +2,7 @@ import Telegraf, { SceneContextMessageUpdate } from "telegraf"
 
 import logger from "./config/logger"
 import env from "./config/env"
-import { Bot } from "./types"
+import { Bot } from "./types/bot"
 import { configureCommands } from "./commands"
 import { helpMessage } from "./messages/ru/help"
 import configureMiddlewares from "./middlewares"

@@ -2,15 +2,27 @@ import { BaseScene } from "telegraf"
 import { subscriberMenu } from "./menus"
 import { Scene } from "../sceneEnum"
 import subscriberMessages from "../../messages/ru/subscriberMessages"
-import { UserService } from "../../services/userService"
-import { PaymentService } from "../../services/paymentService"
+import { getUserByTelegramId, getAdminInfo } from "../../services/userService"
+import { getPaymentInfoForSubscriber } from "../../services/paymentService"
 import { DataError } from "../../errors/customErrors"
 
 const subscriberScene = new BaseScene(Scene.Subscriber)
 
 subscriberScene.enter(async (ctx) => {
+  const userId = ctx.from?.id
+
+  if (userId === undefined) {
+    throw new DataError("No user id is present in context")
+  }
+
+  const user = await getUserByTelegramId(userId)
+
+  if (user === null) {
+    throw new DataError("Unable to find user in DB")
+  }
+
   return ctx.replyWithMarkdown(
-    subscriberMessages.SUBSCRIBER_HEADER,
+    subscriberMessages.subscriberHeader(user.firstName),
     subscriberMenu
   )
 })
@@ -18,7 +30,7 @@ subscriberScene.enter(async (ctx) => {
 subscriberScene.hears(
   subscriberMessages.SUBSCRIBER_GET_SUBSCRIPTION_INFO,
   async (ctx) => {
-    const adminInfo = await UserService.getAdminInfo()
+    const adminInfo = await getAdminInfo()
 
     return ctx.replyWithMarkdown(subscriberMessages.subscriptionInfo(adminInfo))
   }
@@ -33,7 +45,7 @@ subscriberScene.hears(
       throw new DataError("Current user id is missing")
     }
 
-    const paymentInfo = await PaymentService.getPaymentInfoForSubscriber(tId)
+    const paymentInfo = await getPaymentInfoForSubscriber(tId)
 
     return ctx.replyWithMarkdown(subscriberMessages.paymentStatus(paymentInfo))
   }

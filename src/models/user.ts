@@ -1,8 +1,10 @@
 import { pool } from "../db"
 import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
+import { DatabaseError } from "../errors/customErrors"
 
 interface UserProps {
   telegramId: number
+  chatId: number
   firstName: string
   lastName?: string
   username?: string
@@ -10,12 +12,20 @@ interface UserProps {
 
 export class User {
   public telegramId: number
+  public chatId: number
   public firstName: string
   public lastName?: string
   public username?: string
 
-  constructor({ telegramId, firstName, lastName, username }: UserProps) {
+  constructor({
+    telegramId,
+    chatId,
+    firstName,
+    lastName,
+    username
+  }: UserProps) {
     this.telegramId = telegramId
+    this.chatId = chatId
     this.firstName = firstName
     this.lastName = lastName
     this.username = username
@@ -50,14 +60,21 @@ export class User {
 
   public static async create({
     telegramId,
+    chatId,
     firstName,
     lastName,
     username
   }: UserProps): Promise<void> {
-    await pool.query(
-      "INSERT INTO users (telegram_id, first_name, last_name, username) VALUES ($1, $2, $3, $4)",
-      [telegramId, firstName, lastName, username]
+    const {
+      rowCount
+    } = await pool.query(
+      "INSERT INTO users (telegram_id, chat_id, first_name, last_name, username) VALUES ($1, $2, $3, $4, $5)",
+      [telegramId, chatId, firstName, lastName, username]
     )
+
+    if (rowCount !== 1) {
+      throw new DatabaseError("Failed to save user to DB")
+    }
   }
 
   public static async findAllByIds(ids: number[]): Promise<User[]> {
@@ -84,5 +101,20 @@ export class User {
     }
 
     return result.rows.map((row) => new User(camelCaseKeys<User>(row)))
+  }
+
+  public static async findAllChatIds(
+    usersToPayIds: number[]
+  ): Promise<number[]> {
+    const result = await pool.query(
+      "SELECT chat_id FROM users WHERE telegram_id IN ($1)",
+      [usersToPayIds.join(", ")]
+    )
+
+    if (result.rowCount === 0) {
+      return []
+    }
+
+    return result.rows.map((row) => row.chat_id)
   }
 }

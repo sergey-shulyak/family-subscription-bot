@@ -1,33 +1,52 @@
 import { User as TelegramUser } from "telegraf/typings/telegram-types"
 import { User } from "../models/user"
+import { Payment } from "../models/payment"
 import env from "../config/env"
 import { DataError } from "../errors/customErrors"
+import { nextBillingDate, previousBillingDate } from "./paymentService"
 
-export class UserService {
-  public static async isUserExists(telegramId: number): Promise<boolean> {
-    return (await User.findByTelegramId(telegramId)) !== null
+export async function isUserExists(telegramId: number): Promise<boolean> {
+  return (await User.findByTelegramId(telegramId)) !== null
+}
+
+export async function saveUser(
+  userData: TelegramUser,
+  chatId: number
+): Promise<void> {
+  await User.create({
+    telegramId: userData.id,
+    chatId,
+    firstName: userData.first_name,
+    lastName: userData.last_name,
+    username: userData.username
+  })
+}
+
+export async function getAdminInfo(): Promise<User> {
+  const adminInfo = await User.findByTelegramId(env.SUBSCRIPTION_OWNER_ID)
+
+  if (adminInfo === null) {
+    throw new DataError("Admin info is empty in DB")
   }
 
-  public static async saveUser(userData: TelegramUser): Promise<void> {
-    await User.create({
-      telegramId: userData.id,
-      firstName: userData.first_name,
-      lastName: userData.last_name,
-      username: userData.username
-    })
-  }
+  return adminInfo
+}
 
-  public static async getAdminInfo(): Promise<User> {
-    const adminInfo = await User.findByTelegramId(env.SUBSCRIPTION_OWNER_ID)
+export async function getSubscribers(): Promise<User[]> {
+  return User.findAllExceptAdmin(env.SUBSCRIPTION_OWNER_ID)
+}
 
-    if (adminInfo === null) {
-      throw new DataError("Admin info is empty in DB")
-    }
+export async function getUserByTelegramId(
+  telegramId: number
+): Promise<User | null> {
+  return User.findByTelegramId(telegramId)
+}
 
-    return adminInfo
-  }
+export async function getChatIdsForPayment(): Promise<number[]> {
+  const subscribersToPay = await Payment.findAllDebtorIds(
+    previousBillingDate().toDate(),
+    nextBillingDate().toDate()
+  )
 
-  public static async getSubscribers(): Promise<User[]> {
-    return User.findAllExceptAdmin(env.SUBSCRIPTION_OWNER_ID)
-  }
+  return User.findAllChatIds(subscribersToPay)
 }
