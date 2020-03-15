@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node build/index.js | pino-pretty",
     "start:dev": "nodemon",
+    "migrate": "node-pg-migrate --tsconfig tsconfig.json",
     "debug": "node -r ts-node/register src/server.ts | pino-pretty",
     "tsc": "tsc",
     "lint": "eslint --ext ts src/**"
@@ -20,6 +21,7 @@
     "dotenv-safe": "^8.2.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
+    "node-pg-migrate": "^4.2.2",
     "pg": "^7.17.1",
     "pino": "^5.16.0",
     "pino-pretty": "^3.5.0",

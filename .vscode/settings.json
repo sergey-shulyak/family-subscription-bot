@@ -4,5 +4,5 @@
     "middlewares",
     "telegraf"
   ],
-  "debug.node.autoAttach": "off"
+  "debug.node.autoAttach": "on"
 }

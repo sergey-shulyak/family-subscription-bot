@@ -16,9 +16,9 @@ function createAndConfigureBot(): Bot {
 
   configureMiddlewares(bot)
 
-  bot.start(async (ctx) =>
-    (ctx as SceneContextMessageUpdate).scene.enter(Scene.Greeter)
-  )
+  bot.start(async (ctx) => {
+    return (ctx as SceneContextMessageUpdate).scene.enter(Scene.Greeter)
+  })
 
   bot.help(async (ctx) => ctx.reply(helpMessage))
 
