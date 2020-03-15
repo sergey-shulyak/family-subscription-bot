@@ -1,7 +1,9 @@
 import { Markup } from "telegraf"
-import greeterMessages from "../../messages/ru/greeterMessages"
+import subscriberMessages from "../../messages/ru/subscriberMessages"
 
-export const greeterMenu = Markup.keyboard([greeterMessages.GREETING_SEND_ID])
-  .oneTime()
+export const subscriberMenu = Markup.keyboard([
+  subscriberMessages.SUBSCRIBER_GET_PAYMENT_INFO,
+  subscriberMessages.SUBSCRIBER_GET_SUBSCRIPTION_INFO
+])
   .resize()
   .extra()

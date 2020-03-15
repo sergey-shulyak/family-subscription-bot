@@ -1,4 +1,4 @@
-import { BaseScene } from "telegraf"
+import { BaseScene, SceneContextMessageUpdate } from "telegraf"
 import { greeterMenu } from "./menus"
 import greeterMessages from "../../messages/ru/greeterMessages"
 import { Scene } from "../sceneEnum"
@@ -12,6 +12,15 @@ greeterScene.enter(async (ctx) => {
   return ctx.replyWithMarkdown(greeterMessages.GREETING_HEADER, greeterMenu)
 })
 
+async function getSceneForUser(
+  tId: Number,
+  ctx: SceneContextMessageUpdate
+): Promise<Scene> {
+  return tId === env.SUBSCRIPTION_OWNER_ID
+    ? ctx.scene.enter(Scene.Owner)
+    : ctx.scene.enter(Scene.Subscriber)
+}
+
 greeterScene.hears(greeterMessages.GREETING_SEND_ID, async (ctx) => {
   const userData = ctx.from
 
@@ -19,6 +28,12 @@ greeterScene.hears(greeterMessages.GREETING_SEND_ID, async (ctx) => {
     throw new DataError(
       "Unable to save user data, received empty data from context"
     )
+  }
+
+  const userExists = await UserService.isUserExists(userData.id)
+
+  if (userExists) {
+    return getSceneForUser(userData.id, ctx)
   }
 
   try {
