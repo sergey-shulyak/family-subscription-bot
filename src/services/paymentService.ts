@@ -3,9 +3,7 @@ import { Payment } from "../models/payment"
 import moment, { Moment } from "moment"
 import { User } from "../models/user"
 import isEmpty from "lodash/isEmpty"
-import pick from "lodash/pick"
-import { getExchangeRates } from "../api/currencyExchangeApi"
-import { convertCurrency } from "nodejs-currency-converter"
+import { getExchangeRate } from "../api/currencyExchangeApi"
 
 export interface SubscriberPaymentInfo {
   isPaid: boolean
@@ -59,27 +57,13 @@ export async function getDebtors(): Promise<User[]> {
   return isEmpty(debtorIds) ? [] : User.findAllByIds(debtorIds)
 }
 
-export async function getPaymentPrice(): Promise<number> {
-  // const rates = pick(
-  //   await getExchangeRates(),
-  //   "EUR",
-  //   env.SUBSCRIPTION_CURRENCY.toUpperCase(),
-  //   env.PAYMENT_CURRENCY.toUpperCase()
-  // )
-
-  return convertCurrency(
-    env.SUBSCRIPTION_PRICE_PER_MEMBER,
+export async function getPaymentPrice(
+  priceInSubscriptionCurrency: number
+): Promise<number> {
+  const conversionRate = await getExchangeRate(
     env.SUBSCRIPTION_CURRENCY,
     env.PAYMENT_CURRENCY
   )
 
-  // TODO: Maybe use another API without this damn conversion
-  // const conversionRate =
-  //   rates.EUR *
-  //   rates[env.SUBSCRIPTION_CURRENCY.toUpperCase()] *
-  //   rates[env.PAYMENT_CURRENCY.toUpperCase()]
-
-  // console.log("R", conversionRate)
-
-  // return env.SUBSCRIPTION_PRICE_PER_MEMBER * conversionRate
+  return Number(priceInSubscriptionCurrency) * conversionRate
 }

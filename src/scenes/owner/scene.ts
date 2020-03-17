@@ -8,6 +8,7 @@ import {
   nextBillingDate,
   getPaymentPrice
 } from "../../services/paymentService"
+import env from "../../config/env"
 import isEmpty = require("lodash/isEmpty")
 
 const ownerScene = new BaseScene(Scene.Subscriber)
@@ -44,13 +45,18 @@ ownerScene.hears(ownerMessages.OWNER_SUBSCRIBER_LIST, async (ctx) => {
 ownerScene.hears(ownerMessages.OWNER_GET_SUBSCRIPTION_INFO, async (ctx) => {
   const adminInfo = await getAdminInfo()
 
-  const pricePerMemberInPaymentCurrency = await getPaymentPrice()
+  const [subscriptionPrice, pricePerMember] = await Promise.all([
+    getPaymentPrice(env.SUBSCRIPTION_PRICE),
+    getPaymentPrice(env.SUBSCRIPTION_PRICE_PER_MEMBER)
+  ])
 
   return ctx.replyWithMarkdown(
     ownerMessages.subscriptionInfo(
       adminInfo,
       nextBillingDate().format("DD.MM"),
-      pricePerMemberInPaymentCurrency
+      subscriptionPrice,
+      pricePerMember,
+      env.SUBSCRIPTION_CARD_NUMBER
     )
   )
 })

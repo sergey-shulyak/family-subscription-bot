@@ -1,6 +1,10 @@
 import env from "../../config/env"
-import currencyMap from "../../common/currencyMap"
 import { User } from "../../models/user"
+import { createFormatter } from "../../common/currencyFormatter"
+import { formatCardNumber } from "../../helpers/creditCardUtils"
+
+const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
+const paymentFormatter = createFormatter(env.PAYMENT_CURRENCY)
 
 const usernameMapper = (user: User): string => {
   let result = user.firstName
@@ -23,16 +27,19 @@ export default {
   subscriptionInfo: (
     adminInfo: User,
     nextBillingDate: string,
-    priceInPaymentCurrency: number
+    priceInPaymentCurrency: number,
+    priceInPaymentCurrencyPerMember: number,
+    cardNumber: string
   ) => `
 *Подписка*: ${env.SUBSCRIPTION_TITLE}
-*Стоимость*: ${env.SUBSCRIPTION_PRICE} ${
-    currencyMap[env.SUBSCRIPTION_CURRENCY]
-  } (${priceInPaymentCurrency} ${currencyMap[env.PAYMENT_CURRENCY]})
-*Стоимость с человека*: ${env.SUBSCRIPTION_PRICE_PER_MEMBER} ${
-    currencyMap[env.SUBSCRIPTION_CURRENCY]
-  } (${priceInPaymentCurrency} ${currencyMap[env.PAYMENT_CURRENCY]})
+*Стоимость*: ${subscriptionFormatter.format(
+    env.SUBSCRIPTION_PRICE
+  )} (${paymentFormatter.format(priceInPaymentCurrency)})
+*Стоимость с человека*: ${subscriptionFormatter.format(
+    env.SUBSCRIPTION_PRICE_PER_MEMBER
+  )} (${paymentFormatter.format(priceInPaymentCurrencyPerMember)})
 *Дата следующей оплаты*: ${nextBillingDate}
+*Карта*: ${formatCardNumber(cardNumber)}
 *Администратор подписки*: ${adminInfo.firstName} ${adminInfo.lastName} (@${
     adminInfo.username
   })

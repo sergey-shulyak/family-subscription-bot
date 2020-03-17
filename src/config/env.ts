@@ -17,14 +17,15 @@ interface AppConfig {
 
   PAYMENT_CURRENCY: string
 
-  FIXER_API_KEY: string
-  FIXER_API_URL: string
+  PRIVAT_URL: string
 
   DB_HOST: string
   DB_PORT: number
   DB_DATABASE: string
   DB_USERNAME: string
   DB_PASSWORD: string
+
+  LOCALE: string
 }
 
 const env = dotenv.config()

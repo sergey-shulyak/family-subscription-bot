@@ -2,7 +2,6 @@ import { Middleware, SceneContextMessageUpdate, Stage } from "telegraf"
 import paymentMessages from "../messages/ru/paymentMessages"
 import { getPaymentPrice } from "../services/paymentService"
 import env from "../config/env"
-import currencyMap from "../common/currencyMap"
 import { getChatIdsForPayment } from "../services/userService"
 
 const commands: Map<string, Middleware<SceneContextMessageUpdate>> = new Map([
@@ -14,7 +13,9 @@ const commands: Map<string, Middleware<SceneContextMessageUpdate>> = new Map([
     // Payment commands
     "sendSubscriptionInvoice",
     async (ctx: SceneContextMessageUpdate) => {
-      const paymentPrice = await getPaymentPrice()
+      const paymentPrice = await getPaymentPrice(
+        env.SUBSCRIPTION_PRICE_PER_MEMBER
+      )
 
       const chatIds = await getChatIdsForPayment()
 
@@ -24,7 +25,7 @@ const commands: Map<string, Middleware<SceneContextMessageUpdate>> = new Map([
           paymentMessages.paymentDetails(
             env.SUBSCRIPTION_TITLE,
             paymentPrice,
-            currencyMap[env.PAYMENT_CURRENCY]
+            env.SUBSCRIPTION_PRICE_PER_MEMBER
           )
         ),
         ctx.telegram.sendMessage(

@@ -1,23 +1,27 @@
 import env from "../config/env"
 import axios from "axios"
-import mapValues from "lodash/mapValues"
+import cheerio from "cheerio"
 
-export interface CurrencyExchangeRates {
-  [currency: string]: number
+const nbuSelectors: {
+  [key: string]: string
+} = {
+  EUR:
+    "#widget > div:nth-child(1) > article > div:nth-child(4) > div > table > tbody > tr:nth-child(1) > td:nth-child(3)",
+  USD:
+    "#widget > div:nth-child(1) > article > div:nth-child(4) > div > table > tbody > tr:nth-child(2) > td:nth-child(3)"
 }
 
-export async function getExchangeRates(): Promise<CurrencyExchangeRates> {
-  // exchangeRequestUrl.searchParams.append("access_key", env.FIXER_API_KEY)
-  // exchangeRequestUrl.searchParams.append("base", base)
-  // exchangeRequestUrl.searchParams.append("symbols", currencies.join(","))
+export async function getExchangeRate(
+  from: string,
+  to: string = "UAH"
+): Promise<number> {
+  const { data: html } = await axios.get(env.PRIVAT_URL)
 
-  const {
-    data: { rates }
-  } = await axios.get(`${env.FIXER_API_URL}/latest`, {
-    params: {
-      access_key: env.FIXER_API_KEY
-    }
-  })
+  const $ = cheerio.load(html)
 
-  return mapValues(rates, Number)
+  const rate = $(nbuSelectors[from])
+    .text()
+    .trim()
+
+  return Number(rate)
 }

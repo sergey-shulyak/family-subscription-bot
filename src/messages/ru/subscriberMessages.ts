@@ -1,8 +1,10 @@
 import env from "../../config/env"
-import currencyMap from "../../common/currencyMap"
 import { User } from "../../models/user"
 import { SubscriberPaymentInfo } from "../../services/paymentService"
-import moment = require("moment")
+import moment from "moment"
+import { createFormatter } from "../../common/currencyFormatter"
+
+const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
 
 export default {
   subscriberHeader: (firstName: string) => `
@@ -12,9 +14,9 @@ export default {
   SUBSCRIBER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
   subscriptionInfo: (adminInfo: User) => `
 *Подписка*: ${env.SUBSCRIPTION_TITLE}
-*Стоимость с человека*: ${env.SUBSCRIPTION_PRICE_PER_MEMBER} ${
-    currencyMap[env.SUBSCRIPTION_CURRENCY]
-  }
+*Стоимость с человека*: ${subscriptionFormatter.format(
+    env.SUBSCRIPTION_PRICE_PER_MEMBER
+  )}
 *Администратор подписки*: ${adminInfo.firstName} ${adminInfo.lastName} (@${
     adminInfo.username
   })

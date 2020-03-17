@@ -1,15 +1,20 @@
-import currencyMap from "../../common/currencyMap"
 import { formatCardNumber } from "../../helpers/creditCardUtils"
+import { createFormatter } from "../../common/currencyFormatter"
+import env from "../../config/env"
+
+const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
+const paymentFormatter = createFormatter(env.PAYMENT_CURRENCY)
 
 export default {
   paymentDetails: (
     subscriptionTitle: string,
     price: number,
-    currency: string
+    priceInSubscriptionCurrency: number
   ) => `
 *${subscriptionTitle}*
-*Сумма*: ${price} ${currencyMap[currency]}
-900404674
+*Сумма*: ${paymentFormatter.format(price)} (${subscriptionFormatter.format(
+    priceInSubscriptionCurrency
+  )})
 *Номер карты*:
 `,
 
