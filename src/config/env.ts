@@ -1,4 +1,5 @@
 import dotenv from "dotenv-safe"
+import dotenvParseVariables from "dotenv-parse-variables"
 import logger from "./logger"
 
 interface AppConfig {
@@ -30,7 +31,7 @@ interface AppConfig {
 
 const env = dotenv.config()
 
-if (env.error !== undefined) {
+if (env.error !== undefined || env.parsed === undefined) {
   throw env.error
 }
 
@@ -38,4 +39,6 @@ if (process.env.PRINT_ENV === "true") {
   logger.debug("Environment:", JSON.stringify(env.parsed, null, 2))
 }
 
-export default (env.parsed as unknown) as AppConfig
+const typedEnv = dotenvParseVariables(env.parsed)
+
+export default (typedEnv as unknown) as AppConfig

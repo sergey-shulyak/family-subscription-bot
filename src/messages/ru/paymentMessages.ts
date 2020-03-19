@@ -11,11 +11,11 @@ export default {
     price: number,
     priceInSubscriptionCurrency: number
   ) => `
-*${subscriptionTitle}*
-*Сумма*: ${paymentFormatter.format(price)} (${subscriptionFormatter.format(
+👏 *Пора плотить за ${subscriptionTitle}*
+💰 *Сумма*: ${paymentFormatter.format(price)} (${subscriptionFormatter.format(
     priceInSubscriptionCurrency
   )})
-*Номер карты*:
+💳 *Номер карты*:
 `,
 
   cardNumber: (cardNumber: string) => formatCardNumber(cardNumber)

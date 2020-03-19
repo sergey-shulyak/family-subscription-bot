@@ -23,7 +23,7 @@ const usernameMapper = (user: User): string => {
 export default {
   ownerHeader: (firstName: string) =>
     `*Привет, ${firstName}*
-Ты вошел как *администратор*`,
+Ты вошел как *администратор* 👨‍✈️`,
   OWNER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
 
   subscriptionInfo: (
@@ -33,16 +33,16 @@ export default {
     priceInPaymentCurrencyPerMember: number,
     cardNumber: string
   ) => `
-*Подписка*: ${env.SUBSCRIPTION_TITLE}
-*Стоимость*: ${subscriptionFormatter.format(
+📜 *Подписка*: ${env.SUBSCRIPTION_TITLE}
+💵 *Стоимость*: ${subscriptionFormatter.format(
     env.SUBSCRIPTION_PRICE
   )} (${paymentFormatter.format(priceInPaymentCurrency)})
-*Стоимость с человека*: ${subscriptionFormatter.format(
+👨‍🌾 *Стоимость с человека*: ${subscriptionFormatter.format(
     env.SUBSCRIPTION_PRICE_PER_MEMBER
   )} (${paymentFormatter.format(priceInPaymentCurrencyPerMember)})
-*Дата следующей оплаты*: ${nextBillingDate}
-*Карта*: ${formatCardNumber(cardNumber)}
-*Администратор подписки*: ${adminInfo.firstName} ${adminInfo.lastName} (@${
+📆 *Дата следующей оплаты*: ${nextBillingDate}
+💳 *Карта*: ${formatCardNumber(cardNumber)}
+👨‍✈️ *Администратор подписки*: ${adminInfo.firstName} ${adminInfo.lastName} (@${
     adminInfo.username
   })
 `,

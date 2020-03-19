@@ -18,7 +18,7 @@ async function getSceneForUser(
   ctx: SceneContextMessageUpdate
 ): Promise<Scene> {
   return tId === env.SUBSCRIPTION_OWNER_ID
-    ? ctx.scene.enter(Scene.Subscriber)
+    ? ctx.scene.enter(Scene.Owner)
     : ctx.scene.enter(Scene.Subscriber)
 }
 
