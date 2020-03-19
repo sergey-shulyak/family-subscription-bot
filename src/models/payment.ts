@@ -64,15 +64,19 @@ export class Payment {
   }
 
   public static async findAllDebtorIds(
-    previousBillingDate: Date,
-    nextBillingDate: Date
+    previousBilling: Date,
+    nextBilling: Date,
+    adminId: number
   ): Promise<number[]> {
     const result = await pool.query(
       `
         SELECT DISTINCT subscriber_id FROM payments
-        WHERE transaction_time NOT BETWEEN $1 AND $2
+        WHERE transaction_time <= $1 AND transaction_time >= $2
+        UNION
+        SELECT chat_id FROM users
+        WHERE (SELECT DISTINCT count(*) FROM payments) = 0 AND telegram_id != $3;
       `,
-      [previousBillingDate, nextBillingDate]
+      [previousBilling, nextBilling, adminId]
     )
 
     if (result.rowCount === 0) {

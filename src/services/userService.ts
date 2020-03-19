@@ -4,6 +4,7 @@ import { Payment } from "../models/payment"
 import env from "../config/env"
 import { DataError } from "../errors/customErrors"
 import { nextBillingDate, previousBillingDate } from "./paymentService"
+import logger from "../config/logger"
 
 export async function isUserExists(telegramId: number): Promise<boolean> {
   return (await User.findByTelegramId(telegramId)) !== null
@@ -45,8 +46,10 @@ export async function getUserByTelegramId(
 export async function getChatIdsForPayment(): Promise<number[]> {
   const subscribersToPay = await Payment.findAllDebtorIds(
     previousBillingDate().toDate(),
-    nextBillingDate().toDate()
+    nextBillingDate().toDate(),
+    (await getAdminInfo()).telegramId
   )
 
+  logger.debug("Subs", subscribersToPay)
   return User.findAllChatIds(subscribersToPay)
 }

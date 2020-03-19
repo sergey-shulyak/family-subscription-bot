@@ -34,6 +34,6 @@ export async function start(): Promise<void> {
   await pool.connect()
 
   const bot = createAndConfigureBot()
-  startCronJobs(bot.context)
+  startCronJobs()
   await bot.launch()
 }

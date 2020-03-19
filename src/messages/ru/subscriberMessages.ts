@@ -8,7 +8,7 @@ const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
 
 export default {
   subscriberHeader: (firstName: string) => `
-${firstName}, Ты вошел как подписчик 🎧
+${firstName}, ты вошел как подписчик 🎧
 
 📜 Текущая подписка: *${env.SUBSCRIPTION_TITLE}*
 `,

@@ -1,12 +1,12 @@
-import { Context } from "telegraf"
 import { setUpJob as setUpPaymentReminderJob } from "./paymentReminderJob"
 import logger from "../config/logger"
+import { bot } from "../bot"
 
 const jobSetUppers = [setUpPaymentReminderJob]
 
-export function startCronJobs(ctx: Context): void {
+export function startCronJobs(): void {
   jobSetUppers.forEach((setUpper) => {
-    const [job, name] = setUpper(ctx)
+    const [job, name] = setUpper(bot)
     logger.debug(`${name} is set up`)
 
     logger.debug(`${name} is starting`)

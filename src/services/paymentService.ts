@@ -4,6 +4,7 @@ import moment, { Moment } from "moment"
 import { User } from "../models/user"
 import isEmpty from "lodash/isEmpty"
 import { getExchangeRate } from "../api/currencyExchangeApi"
+import { getAdminInfo } from "./userService"
 
 export interface SubscriberPaymentInfo {
   isPaid: boolean
@@ -51,7 +52,8 @@ export async function getPaymentInfoForSubscriber(
 export async function getDebtors(): Promise<User[]> {
   const debtorIds = await Payment.findAllDebtorIds(
     previousBillingDate().toDate(),
-    nextBillingDate().toDate()
+    nextBillingDate().toDate(),
+    (await getAdminInfo()).telegramId
   )
 
   return isEmpty(debtorIds) ? [] : User.findAllByIds(debtorIds)

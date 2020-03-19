@@ -1,16 +1,18 @@
 import { CronJob } from "cron"
-import logger from "../config/logger"
+
 import { nextBillingDate, getPaymentPrice } from "../services/paymentService"
-import { Context } from "telegraf"
-import env from "../config/env"
 import { getChatIdsForPayment } from "../services/userService"
 import paymentMessages from "../messages/ru/paymentMessages"
 
-export function setUpJob(ctx: Context): [CronJob, string] {
+import logger from "../config/logger"
+import env from "../config/env"
+import { Bot } from "../types/bot"
+
+export function setUpJob(bot: Bot): [CronJob, string] {
   logger.info("Setting up a Payment Reminder Job")
 
   const nextPaymentDate = nextBillingDate()
-  const cronTime = `0 12 ${nextPaymentDate.date()} * *`
+  const cronTime = `*/1 * ${nextPaymentDate.date()} * *`
 
   const handler: () => void = async () => {
     const paymentPrice = await getPaymentPrice(
@@ -19,18 +21,15 @@ export function setUpJob(ctx: Context): [CronJob, string] {
 
     const chatIds = await getChatIdsForPayment()
 
-    const messagePromises = chatIds.flatMap((cId: number) => [
-      ctx.telegram.sendMessage(
+    const messagePromises = chatIds.map((cId: number) => [
+      bot.telegram.sendMessage(
         cId,
         paymentMessages.paymentDetails(
           env.SUBSCRIPTION_TITLE,
           paymentPrice,
-          env.SUBSCRIPTION_PRICE_PER_MEMBER
+          env.SUBSCRIPTION_PRICE_PER_MEMBER,
+          env.SUBSCRIPTION_CARD_NUMBER
         )
-      ),
-      ctx.telegram.sendMessage(
-        cId,
-        paymentMessages.cardNumber(env.SUBSCRIPTION_CARD_NUMBER)
       )
     ])
 

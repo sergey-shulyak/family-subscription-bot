@@ -79,8 +79,8 @@ export class User {
 
   public static async findAllByIds(ids: number[]): Promise<User[]> {
     const result = await pool.query(
-      "SELECT * FROM users WHERE telegram_id IN ($1)",
-      [ids.join(", ")]
+      "SELECT * FROM users WHERE telegram_id ANY (string_to_array($1, ',')::int[])",
+      [ids.join(",")]
     )
 
     if (result.rowCount === 0) {
@@ -107,8 +107,8 @@ export class User {
     usersToPayIds: number[]
   ): Promise<number[]> {
     const result = await pool.query(
-      "SELECT chat_id FROM users WHERE telegram_id IN ($1)",
-      [usersToPayIds.join(", ")]
+      "SELECT chat_id FROM users WHERE telegram_id = ANY (string_to_array($1, ',')::int[])",
+      [usersToPayIds.join(",")]
     )
 
     if (result.rowCount === 0) {

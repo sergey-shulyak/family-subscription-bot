@@ -19,18 +19,15 @@ const commands: Map<string, Middleware<SceneContextMessageUpdate>> = new Map([
 
       const chatIds = await getChatIdsForPayment()
 
-      const messagePromises = chatIds.flatMap((cId: number) => [
+      const messagePromises = chatIds.map((cId: number) => [
         ctx.telegram.sendMessage(
           cId,
           paymentMessages.paymentDetails(
             env.SUBSCRIPTION_TITLE,
             paymentPrice,
-            env.SUBSCRIPTION_PRICE_PER_MEMBER
+            env.SUBSCRIPTION_PRICE_PER_MEMBER,
+            env.SUBSCRIPTION_CARD_NUMBER
           )
-        ),
-        ctx.telegram.sendMessage(
-          cId,
-          paymentMessages.cardNumber(env.SUBSCRIPTION_CARD_NUMBER)
         )
       ])
 
