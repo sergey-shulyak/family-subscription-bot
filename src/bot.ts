@@ -8,6 +8,7 @@ import { helpMessage } from "./messages/ru/help"
 import configureMiddlewares from "./middlewares"
 import { Scene } from "./scenes/sceneEnum"
 import { pool } from "./db"
+import { startCronJobs } from "./cronJobs"
 
 export let bot: Bot
 
@@ -33,5 +34,6 @@ export async function start(): Promise<void> {
   await pool.connect()
 
   const bot = createAndConfigureBot()
+  startCronJobs(bot.context)
   await bot.launch()
 }
