@@ -21,7 +21,9 @@ const usernameMapper = (user: User): string => {
 }
 
 export default {
-  ownerHeader: (firstName: string) => `Добро пожаловать, ${firstName}`,
+  ownerHeader: (firstName: string) =>
+    `*Привет, ${firstName}*
+Ты вошел как *администратор*`,
   OWNER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
 
   subscriptionInfo: (

@@ -18,7 +18,7 @@ async function getSceneForUser(
   ctx: SceneContextMessageUpdate
 ): Promise<Scene> {
   return tId === env.SUBSCRIPTION_OWNER_ID
-    ? ctx.scene.enter(Scene.Owner)
+    ? ctx.scene.enter(Scene.Subscriber)
     : ctx.scene.enter(Scene.Subscriber)
 }
 
@@ -50,9 +50,7 @@ greeterScene.hears(greeterMessages.GREETING_SEND_ID, async (ctx) => {
 
   await ctx.reply(greeterMessages.GREETING_REGISTRATION_SUCCESS)
 
-  return userData.id === env.SUBSCRIPTION_OWNER_ID
-    ? ctx.scene.enter(Scene.Owner)
-    : ctx.scene.enter(Scene.Subscriber)
+  return getSceneForUser(userData.id, ctx)
 })
 
 export default greeterScene

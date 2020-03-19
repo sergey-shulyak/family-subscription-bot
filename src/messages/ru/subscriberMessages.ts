@@ -8,7 +8,8 @@ const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
 
 export default {
   subscriberHeader: (firstName: string) => `
-*Привет, ${firstName}*
+${firstName}, Ты вошел как подписчик
+
 Текущая подписка: *${env.SUBSCRIPTION_TITLE}*
 `,
   SUBSCRIBER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
@@ -17,9 +18,8 @@ export default {
 *Стоимость с человека*: ${subscriptionFormatter.format(
     env.SUBSCRIPTION_PRICE_PER_MEMBER
   )}
-*Администратор подписки*: ${adminInfo.firstName} ${adminInfo.lastName} (@${
-    adminInfo.username
-  })
+*Администратор подписки*:
+${adminInfo.firstName} ${adminInfo.lastName} (@${adminInfo.username})
 `,
   SUBSCRIBER_GET_PAYMENT_INFO: `Статус оплаты 💵`,
   paymentStatus: (paymentInfo: SubscriberPaymentInfo) => `

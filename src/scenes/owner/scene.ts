@@ -11,7 +11,7 @@ import {
 import env from "../../config/env"
 import isEmpty = require("lodash/isEmpty")
 
-const ownerScene = new BaseScene(Scene.Subscriber)
+const ownerScene = new BaseScene(Scene.Owner)
 
 ownerScene.enter(async (ctx) => {
   const { firstName: adminName } = await getAdminInfo()
