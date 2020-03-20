@@ -23,13 +23,13 @@ ${adminInfo.firstName} ${adminInfo.lastName} (@${adminInfo.username})
 `,
   SUBSCRIBER_GET_PAYMENT_INFO: `Статус оплаты 💵`,
   paymentStatus: (paymentInfo: SubscriberPaymentInfo) => `
-*Статус*: ${paymentInfo.isPaid ? "Оплачено ✅" : "Не оплачено 🛑"}
+📫 *Статус*: ${paymentInfo.isPaid ? "Оплачено ✅" : "Не оплачено 🛑"}
 ${
   paymentInfo.isPaid
     ? `📆 *Последняя оплата*: ${moment(paymentInfo.paidAt).format(
         "DD.MM.YYYY HH:MM"
       )}`
     : ""
-}
-`
+}`,
+  SUBSCRIBER_CONTACT_ADMIN: `Написать админу`
 }

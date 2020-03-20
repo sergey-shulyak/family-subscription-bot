@@ -69,3 +69,7 @@ export async function getPaymentPrice(
 
   return Number(priceInSubscriptionCurrency) * conversionRate
 }
+
+export async function submitPayment(subscriberId: number): Promise<void> {
+  await Payment.create(subscriberId)
+}

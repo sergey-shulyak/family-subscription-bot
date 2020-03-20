@@ -7,6 +7,7 @@ import paymentMessages from "../messages/ru/paymentMessages"
 import logger from "../config/logger"
 import env from "../config/env"
 import { Bot } from "../types/bot"
+import { confirmPaymentMenu } from "../scenes/payment/menus"
 
 export function setUpJob(bot: Bot): [CronJob, string] {
   logger.info("Setting up a Payment Reminder Job")
@@ -29,7 +30,8 @@ export function setUpJob(bot: Bot): [CronJob, string] {
           paymentPrice,
           env.SUBSCRIPTION_PRICE_PER_MEMBER,
           env.SUBSCRIPTION_CARD_NUMBER
-        )
+        ),
+        confirmPaymentMenu
       )
     ])
 

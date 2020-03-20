@@ -1,5 +1,6 @@
 export enum Scene {
   Greeter = "greeter",
   Owner = "owner",
-  Subscriber = "subscriber"
+  Subscriber = "subscriber",
+  Payment = "payment"
 }

@@ -1,4 +1,8 @@
-import Telegraf, { SceneContextMessageUpdate } from "telegraf"
+import Telegraf, {
+  SceneContextMessageUpdate,
+  Context,
+  ContextMessageUpdate
+} from "telegraf"
 
 import logger from "./config/logger"
 import env from "./config/env"
@@ -9,6 +13,7 @@ import configureMiddlewares from "./middlewares"
 import { Scene } from "./scenes/sceneEnum"
 import { pool } from "./db"
 import { startCronJobs } from "./cronJobs"
+import paymentMessages from "./messages/ru/paymentMessages"
 
 export let bot: Bot
 
@@ -24,6 +29,10 @@ function createAndConfigureBot(): Bot {
   bot.help(async (ctx) => ctx.reply(helpMessage))
 
   configureCommands(bot)
+
+  bot.hears(paymentMessages.CONFIRM_PAYMENT, async (ctx) =>
+    (ctx as SceneContextMessageUpdate).scene.enter(Scene.Payment)
+  )
 
   bot.catch((err: Error) => logger.error(err, "Encountered an error"))
 

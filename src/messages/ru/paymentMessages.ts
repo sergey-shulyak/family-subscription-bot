@@ -12,10 +12,16 @@ export default {
     priceInSubscriptionCurrency: number,
     cardNumber: string
   ) => `
-👏 *Пора плотить за ${subscriptionTitle}*
-💰 *Сумма*: ${paymentFormatter.format(price)} (${subscriptionFormatter.format(
+👏 Пора плотить за ${subscriptionTitle}
+💰 Сумма: ${paymentFormatter.format(price)} (${subscriptionFormatter.format(
     priceInSubscriptionCurrency
   )})
-💳 *Номер карты*: ${formatCardNumber(cardNumber)}
+💳 Номер карты: ${formatCardNumber(cardNumber)}
+`,
+  CONFIRM_PAYMENT: "Оплатил 👌",
+  CONFIRM_PAYMENT_SUCCESS: "Благодарю 😏",
+  confirmPaymentError: (adminUsername: string) => `
+Не удалось зафиксировать это знаменательное событие.
+Обратись к админу (@${adminUsername}) и попробуй позже
 `
 }

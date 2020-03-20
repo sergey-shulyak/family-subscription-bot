@@ -1,29 +1,17 @@
 import { pool } from "../db"
 import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
+import { DatabaseError } from "../errors/customErrors"
 
 interface PaymentProps {
-  transactionAmount: number
-  transactionCurrency: string
-  transactionTime?: Date
   subscriberId?: number
 }
 
 export class Payment {
   public id?: string
-  public transactionAmount: number
-  public transactionCurrency: string
   public transactionTime?: Date
   public subscriberId?: number
 
-  constructor({
-    transactionAmount,
-    transactionCurrency,
-    transactionTime,
-    subscriberId
-  }: PaymentProps) {
-    this.transactionAmount = transactionAmount
-    this.transactionCurrency = transactionCurrency
-    this.transactionTime = transactionTime
+  constructor({ subscriberId }: PaymentProps) {
     this.subscriberId = subscriberId
   }
 
@@ -74,9 +62,9 @@ export class Payment {
         WHERE transaction_time <= $1 AND transaction_time >= $2
         UNION
         SELECT chat_id FROM users
-        WHERE (SELECT DISTINCT count(*) FROM payments) = 0 AND telegram_id != $3;
+        WHERE (SELECT DISTINCT count(*) FROM payments) = 0;
       `,
-      [previousBilling, nextBilling, adminId]
+      [previousBilling, nextBilling]
     )
 
     if (result.rowCount === 0) {
@@ -86,15 +74,16 @@ export class Payment {
     return result.rows.map((row) => row.subscriber_id) as number[]
   }
 
-  // public static async create({
-  //   telegramId,
-  //   firstName,
-  //   lastName,
-  //   username
-  // }: PaymentProps): Promise<void> {
-  //   await pool.query(
-  //     "INSERT INTO users (telegram_id, first_name, last_name, username) VALUES ($1, $2, $3, $4)",
-  //     [telegramId, firstName, lastName, username]
-  //   )
-  // }
+  public static async create(subscriberId: number): Promise<void> {
+    const result = await pool.query(
+      "INSERT INTO payments (subscriber_id) VALUES ($1)",
+      [subscriberId]
+    )
+
+    if (result.rowCount === 0) {
+      throw new DatabaseError(
+        `Failed to create a record for payment for ${subscriberId}`
+      )
+    }
+  }
 }
