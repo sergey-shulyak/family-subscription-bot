@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node build/index.js | pino-pretty",
+    "start": "node build/src/server.js | pino-pretty",
     "start:dev": "nodemon",
     "migrate": "node-pg-migrate --tsconfig tsconfig.json",
     "debug": "node -r ts-node/register src/server.ts | pino-pretty",
