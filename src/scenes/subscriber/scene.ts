@@ -5,6 +5,7 @@ import subscriberMessages from "../../messages/ru/subscriberMessages"
 import { getUserByTelegramId, getAdminInfo } from "../../services/userService"
 import { getPaymentInfoForSubscriber } from "../../services/paymentService"
 import { DataError } from "../../errors/customErrors"
+import logger from "../../config/logger"
 
 const subscriberScene = new BaseScene(Scene.Subscriber)
 
@@ -21,10 +22,18 @@ subscriberScene.enter(async (ctx) => {
     throw new DataError("Unable to find user in DB")
   }
 
-  return ctx.replyWithMarkdown(
-    subscriberMessages.subscriberHeader(user.firstName),
-    subscriberMenu
-  )
+  ;(ctx as any).session.visited = true
+
+  logger.debug("session", (ctx as any).session)
+
+  const visited: boolean = (ctx as any).session.visited
+
+  return visited
+    ? ctx.reply(subscriberMessages.RETURN_TO_MENU, subscriberMenu)
+    : ctx.replyWithMarkdown(
+        subscriberMessages.subscriberHeader(user.firstName),
+        subscriberMenu
+      )
 })
 
 subscriberScene.hears(

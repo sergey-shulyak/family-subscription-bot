@@ -31,5 +31,5 @@ ${
       )}`
     : ""
 }`,
-  SUBSCRIBER_CONTACT_ADMIN: `Написать админу`
+  RETURN_TO_MENU: "Возвращаемся в меню"
 }

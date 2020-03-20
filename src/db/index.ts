@@ -10,11 +10,18 @@ export const pool = new Pool({
   password: env.DB_PASSWORD
 })
 
+let isConnected = false
+
 pool.on("error", (err) => {
   logger.error(err, "Database pool error occurred")
   process.exit(1)
 })
 
 pool.on("connect", () => {
+  if (isConnected) {
+    return
+  }
+
+  isConnected = true
   logger.info("Connected to database")
 })

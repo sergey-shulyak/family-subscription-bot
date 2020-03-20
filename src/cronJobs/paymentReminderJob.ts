@@ -13,7 +13,7 @@ export function setUpJob(bot: Bot): [CronJob, string] {
   logger.info("Setting up a Payment Reminder Job")
 
   const nextPaymentDate = nextBillingDate()
-  const cronTime = `*/1 * ${nextPaymentDate.date()} * *`
+  const cronTime = `0 12 ${nextPaymentDate.date()} * *`
 
   const handler: () => void = async () => {
     const paymentPrice = await getPaymentPrice(
@@ -22,20 +22,28 @@ export function setUpJob(bot: Bot): [CronJob, string] {
 
     const chatIds = await getChatIdsForPayment()
 
-    const messagePromises = chatIds.map((cId: number) => [
-      bot.telegram.sendMessage(
-        cId,
-        paymentMessages.paymentDetails(
-          env.SUBSCRIPTION_TITLE,
-          paymentPrice,
-          env.SUBSCRIPTION_PRICE_PER_MEMBER,
-          env.SUBSCRIPTION_CARD_NUMBER
-        ),
-        confirmPaymentMenu
-      )
-    ])
+    await Promise.all(
+      chatIds.map(async (cId) => bot.telegram.sendMessage(cId, "/payment"))
+    )
 
-    return Promise.all(messagePromises)
+    await Promise.all(
+      chatIds.map(async (cId) => bot.telegram.sendChatAction(cId, "typing"))
+    )
+
+    return Promise.all(
+      chatIds.map((cId: number) => [
+        bot.telegram.sendMessage(
+          cId,
+          paymentMessages.paymentDetails(
+            env.SUBSCRIPTION_TITLE,
+            paymentPrice,
+            env.SUBSCRIPTION_PRICE_PER_MEMBER,
+            env.SUBSCRIPTION_CARD_NUMBER
+          ),
+          confirmPaymentMenu
+        )
+      ])
+    )
   }
 
   return [new CronJob(cronTime, handler), "PaymentReminderJob"]

@@ -4,6 +4,7 @@ import { DatabaseError } from "../errors/customErrors"
 
 interface UserProps {
   telegramId: number
+  // TODO: Remove chatIds since telegram Id is chatId as well
   chatId: number
   firstName: string
   lastName?: string

@@ -5,6 +5,7 @@ import { User } from "../models/user"
 import isEmpty from "lodash/isEmpty"
 import { getExchangeRate } from "../api/currencyExchangeApi"
 import { getAdminInfo } from "./userService"
+import logger from "../config/logger"
 
 export interface SubscriberPaymentInfo {
   isPaid: boolean
@@ -72,4 +73,5 @@ export async function getPaymentPrice(
 
 export async function submitPayment(subscriberId: number): Promise<void> {
   await Payment.create(subscriberId)
+  logger.info(`User #${subscriberId} has confirmed payment for subscription`)
 }
