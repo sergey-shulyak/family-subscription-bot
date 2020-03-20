@@ -12,7 +12,7 @@
     "start:dev": "nodemon",
     "migrate": "node-pg-migrate --tsconfig tsconfig.json",
     "debug": "node -r ts-node/register src/server.ts | pino-pretty",
-    "tsc": "tsc",
+    "build": "tsc",
     "lint": "eslint --ext ts src/**"
   },
   "dependencies": {
