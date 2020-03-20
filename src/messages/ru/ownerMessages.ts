@@ -9,12 +9,12 @@ const paymentFormatter = createFormatter(env.PAYMENT_CURRENCY)
 const usernameMapper = (user: User): string => {
   let result = user.firstName
 
-  if (user.lastName !== undefined) {
-    result += user.lastName
+  if (user.lastName !== undefined && user.lastName !== null) {
+    result += ` ${user.lastName}`
   }
 
-  if (user.username !== undefined) {
-    result += `@${user.username}`
+  if (user.username !== undefined && user.username !== null) {
+    result += ` @${user.username}`
   }
 
   return result

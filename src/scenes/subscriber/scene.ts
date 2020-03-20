@@ -10,6 +10,8 @@ import logger from "../../config/logger"
 const subscriberScene = new BaseScene(Scene.Subscriber)
 
 subscriberScene.enter(async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const userId = ctx.from?.id
 
   if (userId === undefined) {
@@ -39,6 +41,8 @@ subscriberScene.enter(async (ctx) => {
 subscriberScene.hears(
   subscriberMessages.SUBSCRIBER_GET_SUBSCRIPTION_INFO,
   async (ctx) => {
+    await ctx.replyWithChatAction("typing")
+
     const adminInfo = await getAdminInfo()
 
     return ctx.replyWithMarkdown(subscriberMessages.subscriptionInfo(adminInfo))
@@ -48,6 +52,8 @@ subscriberScene.hears(
 subscriberScene.hears(
   subscriberMessages.SUBSCRIBER_GET_PAYMENT_INFO,
   async (ctx) => {
+    await ctx.replyWithChatAction("typing")
+
     const tId = ctx.from?.id
 
     if (tId === undefined) {

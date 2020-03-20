@@ -1,6 +1,7 @@
 import { pool } from "../db"
 import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
 import { DatabaseError } from "../errors/customErrors"
+import logger from "../config/logger"
 
 interface UserProps {
   telegramId: number
@@ -80,7 +81,7 @@ export class User {
 
   public static async findAllByIds(ids: number[]): Promise<User[]> {
     const result = await pool.query(
-      "SELECT * FROM users WHERE telegram_id ANY (string_to_array($1, ',')::int[])",
+      "SELECT * FROM users WHERE telegram_id = ANY (string_to_array($1, ',')::int[])",
       [ids.join(",")]
     )
 

@@ -43,6 +43,7 @@ ownerScene.hears(ownerMessages.OWNER_SUBSCRIBER_LIST, async (ctx) => {
 })
 
 ownerScene.hears(ownerMessages.OWNER_GET_SUBSCRIPTION_INFO, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
   const adminInfo = await getAdminInfo()
 
   const [subscriptionPrice, pricePerMember] = await Promise.all([

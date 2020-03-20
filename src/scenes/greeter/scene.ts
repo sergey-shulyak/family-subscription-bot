@@ -10,6 +10,8 @@ import logger from "../../config/logger"
 const greeterScene = new BaseScene(Scene.Greeter)
 
 greeterScene.enter(async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   return ctx.replyWithMarkdown(greeterMessages.GREETING_HEADER, greeterMenu)
 })
 
@@ -17,12 +19,16 @@ async function getSceneForUser(
   tId: Number,
   ctx: SceneContextMessageUpdate
 ): Promise<Scene> {
+  await ctx.replyWithChatAction("typing")
+
   return tId === env.SUBSCRIPTION_OWNER_ID
     ? ctx.scene.enter(Scene.Owner)
     : ctx.scene.enter(Scene.Subscriber)
 }
 
 greeterScene.hears(greeterMessages.GREETING_SEND_ID, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const userData = ctx.from
 
   if (userData === undefined) {
