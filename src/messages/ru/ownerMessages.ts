@@ -7,14 +7,14 @@ const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
 const paymentFormatter = createFormatter(env.PAYMENT_CURRENCY)
 
 const usernameMapper = (user: User): string => {
-  let result = user.firstName
+  let result = `- ${user.firstName}`
 
   if (user.lastName !== undefined && user.lastName !== null) {
     result += ` ${user.lastName}`
   }
 
   if (user.username !== undefined && user.username !== null) {
-    result += ` @${user.username}`
+    result += ` (@${user.username})`
   }
 
   return result
@@ -52,5 +52,5 @@ export default {
   OWNER_NO_DEBTORS: "Должников нет 👍",
 
   subscriberList: (subscribers: User[]) =>
-    subscribers.map(usernameMapper).join("\n\n")
+    subscribers.map(usernameMapper).join("\n")
 }

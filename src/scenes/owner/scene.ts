@@ -9,21 +9,25 @@ import {
   getPaymentPrice
 } from "../../services/paymentService"
 import env from "../../config/env"
-import isEmpty = require("lodash/isEmpty")
+import isEmpty from "lodash/isEmpty"
 
 const ownerScene = new BaseScene(Scene.Owner)
 
 ownerScene.enter(async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const { firstName: adminName } = await getAdminInfo()
   return ctx.replyWithMarkdown(ownerMessages.ownerHeader(adminName), ownerMenu)
 })
 
 ownerScene.hears(ownerMessages.OWNER_DEBTORS, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const debtors = await getDebtors()
 
   const isDebtorsPresent = !isEmpty(debtors)
 
-  return ctx.replyWithMarkdown(
+  return ctx.reply(
     isDebtorsPresent
       ? ownerMessages.subscriberList(debtors)
       : ownerMessages.OWNER_NO_DEBTORS
@@ -31,11 +35,13 @@ ownerScene.hears(ownerMessages.OWNER_DEBTORS, async (ctx) => {
 })
 
 ownerScene.hears(ownerMessages.OWNER_SUBSCRIBER_LIST, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const subscribers = await getSubscribers()
 
   const isSubscribersPresent = !isEmpty(subscribers)
 
-  return ctx.replyWithMarkdown(
+  return ctx.reply(
     isSubscribersPresent
       ? ownerMessages.subscriberList(subscribers)
       : ownerMessages.OWNER_NO_SUBSCRIBERS
