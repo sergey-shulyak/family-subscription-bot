@@ -1,6 +1,10 @@
 {
   "name": "family-subscription-bot",
   "version": "1.0.0",
+  "engines": {
+    "node": "12.x",
+    "yarn": "1.x"
+  },
   "description": "Telegram bot to automate payment accounting",
   "main": "build/server.js",
   "repository": "git@github.com:sergey-shulyak/apple-music-payment-bot.git",
