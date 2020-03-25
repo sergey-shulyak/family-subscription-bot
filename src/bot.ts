@@ -35,6 +35,12 @@ export async function start(): Promise<void> {
 
   const bot = createAndConfigureBot()
   startCronJobs()
-  bot.startWebhook("/secret-path", null, process.env.PORT as any)
+
+  bot.startWebhook(
+    `/${env.TELEGRAM_BOT_API_TOKEN}`,
+    null,
+    process.env.PORT as any
+  )
+
   await bot.launch()
 }
