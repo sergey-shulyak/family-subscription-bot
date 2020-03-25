@@ -35,5 +35,6 @@ export async function start(): Promise<void> {
 
   const bot = createAndConfigureBot()
   startCronJobs()
+  bot.startWebhook("/secret-path", null, process.env.PORT as any)
   await bot.launch()
 }
