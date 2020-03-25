@@ -43,11 +43,11 @@ if (process.env.NODE_ENV === "production") {
     throw env.error
   }
 
-  if (process.env.PRINT_ENV === "true") {
-    logger.debug("Environment:", JSON.stringify(env.parsed, null, 2))
-  }
-
   config = dotenvParseVariables(env.parsed)
+}
+
+if (process.env.PRINT_ENV === "true") {
+  logger.debug("Environment:", JSON.stringify(config, null, 2))
 }
 
 export default (config as unknown) as AppConfig

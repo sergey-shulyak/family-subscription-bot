@@ -36,8 +36,12 @@ export async function start(): Promise<void> {
   const bot = createAndConfigureBot()
   startCronJobs()
 
+  await bot.telegram.setWebhook(
+    `${process.env.URL}/bot-${env.TELEGRAM_BOT_API_TOKEN}`
+  )
+
   bot.startWebhook(
-    `/${env.TELEGRAM_BOT_API_TOKEN}`,
+    `/bot-${env.TELEGRAM_BOT_API_TOKEN}`,
     null,
     process.env.PORT as any
   )
