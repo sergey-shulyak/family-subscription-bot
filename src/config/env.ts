@@ -1,5 +1,7 @@
 import dotenv from "dotenv-safe"
 import dotenvParseVariables from "dotenv-parse-variables"
+import pick from "lodash/pick"
+
 import logger from "./logger"
 
 interface AppConfig {
@@ -23,16 +25,29 @@ interface AppConfig {
   LOCALE: string
 }
 
-const env = dotenv.config()
+let config
 
-if (env.error !== undefined || env.parsed === undefined) {
-  throw env.error
+if (process.env.NODE_ENV === "production") {
+  const envExample = dotenv.config({
+    path: ".env.example",
+    allowEmptyValues: true
+  })
+
+  const processEnv = pick(process.env, Object.keys(envExample.parsed ?? {}))
+
+  config = dotenvParseVariables(processEnv as Record<string, string>)
+} else {
+  const env = dotenv.config()
+
+  if (env.error !== undefined || env.parsed === undefined) {
+    throw env.error
+  }
+
+  if (process.env.PRINT_ENV === "true") {
+    logger.debug("Environment:", JSON.stringify(env.parsed, null, 2))
+  }
+
+  config = dotenvParseVariables(env.parsed)
 }
 
-if (process.env.PRINT_ENV === "true") {
-  logger.debug("Environment:", JSON.stringify(env.parsed, null, 2))
-}
-
-const typedEnv = dotenvParseVariables(env.parsed)
-
-export default (typedEnv as unknown) as AppConfig
+export default (config as unknown) as AppConfig
