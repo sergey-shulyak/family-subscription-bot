@@ -14,9 +14,8 @@ export let session: RedisSession
 function configureSession(): RedisSession {
   session = new RedisSession({
     store: {
-      host: process.env.TELEGRAM_SESSION_HOST ?? "127.0.0.1",
-      port: process.env.TELEGRAM_SESSION_PORT ?? 6379
-    }
+      url: process.env.REDIS_URL
+    } as any
   })
 
   return session

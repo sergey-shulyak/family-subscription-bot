@@ -5,8 +5,8 @@ import logger from "./logger"
 interface AppConfig {
   TELEGRAM_BOT_API_TOKEN: string
 
-  TELEGRAM_SESSION_HOST: string
-  TELEGRAM_SESSION_PORT: number
+  DATABASE_URL: string
+  REDIS_URL: string
 
   SUBSCRIPTION_TITLE: string
   SUBSCRIPTION_OWNER_ID: number
@@ -19,12 +19,6 @@ interface AppConfig {
   PAYMENT_CURRENCY: string
 
   PRIVAT_URL: string
-
-  DB_HOST: string
-  DB_PORT: number
-  DB_DATABASE: string
-  DB_USERNAME: string
-  DB_PASSWORD: string
 
   LOCALE: string
 }
