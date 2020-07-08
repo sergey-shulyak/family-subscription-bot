@@ -22,7 +22,6 @@
   "dependencies": {
     "axios": "^0.19.2",
     "change-case": "^4.1.1",
-    "cheerio": "^1.0.0-rc.3",
     "class-validator": "^0.11.0",
     "cron": "^1.8.2",
     "dotenv-parse-variables": "^0.2.3",

@@ -89,7 +89,7 @@ ownerScene.hears(ownerMessages.OWNER_SEND_REMINDER, async (ctx) => {
     chatIds.map(async (cId) => bot.telegram.sendChatAction(cId, "typing"))
   )
 
-  return Promise.all(
+  await Promise.all(
     chatIds.map((cId: number) => [
       bot.telegram.sendMessage(
         cId,
@@ -103,6 +103,8 @@ ownerScene.hears(ownerMessages.OWNER_SEND_REMINDER, async (ctx) => {
       )
     ])
   )
+
+  return ctx.reply(ownerMessages.OWNER_SEND_REMINDER_DONE)
 })
 
 export default ownerScene
