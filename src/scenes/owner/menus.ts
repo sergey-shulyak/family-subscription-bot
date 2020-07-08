@@ -5,7 +5,8 @@ import ownerMessages from "../../messages/ru/ownerMessages"
 export const ownerMenu = Markup.keyboard([
   ownerMessages.OWNER_DEBTORS,
   ownerMessages.OWNER_GET_SUBSCRIPTION_INFO,
-  ownerMessages.OWNER_SUBSCRIBER_LIST
+  ownerMessages.OWNER_SUBSCRIBER_LIST,
+  ownerMessages.OWNER_SEND_REMINDER
 ])
   .resize()
   .extra()

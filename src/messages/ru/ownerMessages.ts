@@ -50,6 +50,7 @@ export default {
   OWNER_NO_SUBSCRIBERS: "Подписчиков нет 🤷‍♂️",
   OWNER_DEBTORS: `Должники 👮‍♂️`,
   OWNER_NO_DEBTORS: "Должников нет 👍",
+  OWNER_SEND_REMINDER: "Запросить оплату 💰",
 
   subscriberList: (subscribers: User[]) =>
     subscribers.map(usernameMapper).join("\n")

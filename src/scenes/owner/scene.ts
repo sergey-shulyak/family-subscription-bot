@@ -1,6 +1,10 @@
 import { BaseScene } from "telegraf"
 import { Scene } from "../sceneEnum"
-import { getAdminInfo, getSubscribers } from "../../services/userService"
+import {
+  getAdminInfo,
+  getSubscribers,
+  getChatIdsForPayment
+} from "../../services/userService"
 import ownerMessages from "../../messages/ru/ownerMessages"
 import { ownerMenu } from "./menus"
 import {
@@ -10,6 +14,9 @@ import {
 } from "../../services/paymentService"
 import env from "../../config/env"
 import isEmpty from "lodash/isEmpty"
+import { bot } from "../../bot"
+import paymentMessages from "../../messages/ru/paymentMessages"
+import { confirmPaymentMenu } from "../payment/menus"
 
 const ownerScene = new BaseScene(Scene.Owner)
 
@@ -65,6 +72,36 @@ ownerScene.hears(ownerMessages.OWNER_GET_SUBSCRIPTION_INFO, async (ctx) => {
       pricePerMember,
       env.SUBSCRIPTION_CARD_NUMBER
     )
+  )
+})
+
+ownerScene.hears(ownerMessages.OWNER_SEND_REMINDER, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+  const paymentPrice = await getPaymentPrice(env.SUBSCRIPTION_PRICE_PER_MEMBER)
+
+  const chatIds = await getChatIdsForPayment()
+
+  await Promise.all(
+    chatIds.map(async (cId) => bot.telegram.sendMessage(cId, "/payment"))
+  )
+
+  await Promise.all(
+    chatIds.map(async (cId) => bot.telegram.sendChatAction(cId, "typing"))
+  )
+
+  return Promise.all(
+    chatIds.map((cId: number) => [
+      bot.telegram.sendMessage(
+        cId,
+        paymentMessages.paymentDetails(
+          env.SUBSCRIPTION_TITLE,
+          paymentPrice,
+          env.SUBSCRIPTION_PRICE_PER_MEMBER,
+          env.SUBSCRIPTION_CARD_NUMBER
+        ),
+        confirmPaymentMenu
+      )
+    ])
   )
 })
 
