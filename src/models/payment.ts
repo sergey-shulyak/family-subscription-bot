@@ -58,11 +58,12 @@ export class Payment {
   ): Promise<number[]> {
     const result = await pool.query(
       `
-        SELECT DISTINCT subscriber_id FROM payments
-        WHERE transaction_time < $1 AND transaction_time > $2
-        UNION
         SELECT DISTINCT telegram_id FROM users
-        WHERE (SELECT DISTINCT count(*) FROM payments) = 0 AND telegram_id != $3;
+        WHERE
+          (SELECT count(*) FROM payments
+            WHERE subscriber_id = telegram_id
+            AND transaction_time > $1 AND transaction_time < $2) = 0
+	        AND telegram_id != $3;
       `,
       [previousBilling, nextBilling, adminId]
     )

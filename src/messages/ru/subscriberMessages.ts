@@ -5,6 +5,7 @@ import moment from "moment"
 import { createFormatter } from "../../common/currencyFormatter"
 
 const subscriptionFormatter = createFormatter(env.SUBSCRIPTION_CURRENCY)
+const paymentFormatter = createFormatter(env.PAYMENT_CURRENCY)
 
 export default {
   subscriberHeader: (firstName: string) => `
@@ -13,11 +14,14 @@ ${firstName}, ты вошел как подписчик 🎧
 📜 Текущая подписка: *${env.SUBSCRIPTION_TITLE}*
 `,
   SUBSCRIBER_GET_SUBSCRIPTION_INFO: "Информация о подписке ℹ️",
-  subscriptionInfo: (adminInfo: User) => `
+  subscriptionInfo: (
+    adminInfo: User,
+    priceInPaymentCurrencyPerMember: number
+  ) => `
 📜 *Подписка*: ${env.SUBSCRIPTION_TITLE}
 👨‍👩‍👦 *Стоимость с человека*: ${subscriptionFormatter.format(
     env.SUBSCRIPTION_PRICE_PER_MEMBER
-  )}
+  )} (${paymentFormatter.format(priceInPaymentCurrencyPerMember)})
 👨‍✈️ *Администратор подписки*:
 ${adminInfo.firstName} ${adminInfo.lastName} (@${adminInfo.username})
 `,

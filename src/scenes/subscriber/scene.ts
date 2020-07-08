@@ -3,9 +3,13 @@ import { subscriberMenu } from "./menus"
 import { Scene } from "../sceneEnum"
 import subscriberMessages from "../../messages/ru/subscriberMessages"
 import { getUserByTelegramId, getAdminInfo } from "../../services/userService"
-import { getPaymentInfoForSubscriber } from "../../services/paymentService"
+import {
+  getPaymentInfoForSubscriber,
+  getPaymentPrice
+} from "../../services/paymentService"
 import { DataError } from "../../errors/customErrors"
 import logger from "../../config/logger"
+import env from "../../config/env"
 
 const subscriberScene = new BaseScene(Scene.Subscriber)
 
@@ -44,8 +48,16 @@ subscriberScene.hears(
     await ctx.replyWithChatAction("typing")
 
     const adminInfo = await getAdminInfo()
+    const priceInPaymentCurrencyPerMember = await getPaymentPrice(
+      env.SUBSCRIPTION_PRICE_PER_MEMBER
+    )
 
-    return ctx.replyWithMarkdown(subscriberMessages.subscriptionInfo(adminInfo))
+    return ctx.replyWithMarkdown(
+      subscriberMessages.subscriptionInfo(
+        adminInfo,
+        priceInPaymentCurrencyPerMember
+      )
+    )
   }
 )
 
