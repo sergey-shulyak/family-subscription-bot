@@ -1,6 +1,7 @@
 import { pool } from "../db"
 import { mapDbNames as camelCaseKeys } from "../helpers/dbNameMapper"
 import { DatabaseError } from "../errors/customErrors"
+import logger from "../config/logger"
 
 interface PaymentProps {
   subscriberId?: number
@@ -56,6 +57,10 @@ export class Payment {
     nextBilling: Date,
     adminId: number
   ): Promise<number[]> {
+    logger.info("previousBilling", previousBilling)
+    logger.info("nextBilling", previousBilling)
+    logger.info("adminId", previousBilling)
+
     const result = await pool.query(
       `
         SELECT DISTINCT telegram_id FROM users
