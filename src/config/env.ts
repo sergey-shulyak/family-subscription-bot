@@ -4,6 +4,8 @@ import pick from "lodash/pick"
 
 import logger from "./logger"
 
+type CurrencyCode = "USD" | "EUR"
+
 interface AppConfig {
   TELEGRAM_BOT_API_TOKEN: string
 
@@ -15,7 +17,7 @@ interface AppConfig {
   SUBSCRIPTION_CARD_NUMBER: string
   SUBSCRIPTION_PRICE: number
   SUBSCRIPTION_PRICE_PER_MEMBER: number
-  SUBSCRIPTION_CURRENCY: string
+  SUBSCRIPTION_CURRENCY: CurrencyCode
   SUBSCRIPTION_BILLING_DATE: Date
 
   PAYMENT_CURRENCY: string

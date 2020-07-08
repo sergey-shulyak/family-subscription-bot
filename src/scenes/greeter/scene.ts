@@ -26,7 +26,7 @@ async function getSceneForUser(
     : ctx.scene.enter(Scene.Subscriber)
 }
 
-greeterScene.hears(greeterMessages.GREETING_SEND_ID, async (ctx) => {
+greeterScene.on("contact", async (ctx) => {
   await ctx.replyWithChatAction("typing")
 
   const userData = ctx.from
