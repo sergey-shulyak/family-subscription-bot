@@ -1,4 +1,4 @@
-import fs from "fs"
+// import fs from "fs"
 import Telegraf, { SceneContextMessageUpdate } from "telegraf"
 
 import logger from "./config/logger"
@@ -13,14 +13,14 @@ import { startCronJobs } from "./cronJobs"
 
 export let bot: Bot
 
-const tlsOptions = {
-  key: fs.readFileSync("server-key.pem"),
-  cert: fs.readFileSync("server-cert.pem"),
-  ca: [
-    // This is necessary only if the client uses a self-signed certificate.
-    fs.readFileSync("ca-cert.pem")
-  ]
-}
+// const tlsOptions = {
+//   key: fs.readFileSync("server-key.pem"),
+//   cert: fs.readFileSync("server-cert.pem"),
+//   ca: [
+//     // This is necessary only if the client uses a self-signed certificate.
+//     fs.readFileSync("ca-cert.pem")
+//   ]
+// }
 
 function createAndConfigureBot(): Bot {
   bot = new Telegraf(env.TELEGRAM_BOT_API_TOKEN)
@@ -50,12 +50,12 @@ export async function start(): Promise<void> {
     await bot.launch()
   } else {
     await bot.telegram.setWebhook(
-      `https://${process.env.HEROKU_APP_NAME}.herokuapp.com/bot-${env.TELEGRAM_BOT_API_TOKEN}`
+      `https://${process.env.HEROKU_APP_NAME}.herokuapp.com/${env.TELEGRAM_BOT_API_TOKEN}`
     )
 
     bot.startWebhook(
-      `/bot-${env.TELEGRAM_BOT_API_TOKEN}`,
-      tlsOptions,
+      `/${env.TELEGRAM_BOT_API_TOKEN}`,
+      null,
       process.env.PORT as any
     )
   }
