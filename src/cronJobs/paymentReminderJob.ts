@@ -9,6 +9,13 @@ import env from "../config/env"
 import { Bot } from "../types/bot"
 import { confirmPaymentMenu } from "../scenes/payment/menus"
 
+async function notifyOwner(bot: Bot): Promise<void> {
+  await bot.telegram.sendMessage(
+    env.SUBSCRIPTION_OWNER_ID,
+    paymentMessages.PAYMENT_REMINDER_SENT
+  )
+}
+
 export function setUpJob(bot: Bot): [CronJob, string] {
   logger.info("Setting up a Payment Reminder Job")
 
@@ -30,7 +37,7 @@ export function setUpJob(bot: Bot): [CronJob, string] {
       chatIds.map(async (cId) => bot.telegram.sendChatAction(cId, "typing"))
     )
 
-    return Promise.all(
+    await Promise.all(
       chatIds.map((cId: number) => [
         bot.telegram.sendMessage(
           cId,
@@ -44,6 +51,8 @@ export function setUpJob(bot: Bot): [CronJob, string] {
         )
       ])
     )
+
+    await notifyOwner(bot)
   }
 
   return [new CronJob(cronTime, handler), "PaymentReminderJob"]

@@ -23,5 +23,6 @@ export default {
   confirmPaymentError: (adminUsername: string) => `
 Не удалось зафиксировать это знаменательное событие.
 Обратись к админу (@${adminUsername}) и попробуй позже
-`
+`,
+  PAYMENT_REMINDER_SENT: "Уведомление об оплате отправлено подписчикам ⏰"
 }

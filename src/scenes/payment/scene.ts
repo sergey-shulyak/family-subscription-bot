@@ -10,6 +10,8 @@ import paymentMessages from "../../messages/ru/paymentMessages"
 const subscriberScene = new BaseScene(Scene.Payment)
 
 subscriberScene.hears(paymentMessages.CONFIRM_PAYMENT, async (ctx) => {
+  await ctx.replyWithChatAction("typing")
+
   const tId = ctx.from?.id
 
   if (tId === undefined) {
