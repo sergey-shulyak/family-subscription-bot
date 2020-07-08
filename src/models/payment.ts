@@ -57,10 +57,6 @@ export class Payment {
     nextBilling: Date,
     adminId: number
   ): Promise<number[]> {
-    logger.info("previousBilling", previousBilling)
-    logger.info("nextBilling", previousBilling)
-    logger.info("adminId", previousBilling)
-
     const result = await pool.query(
       `
         SELECT DISTINCT telegram_id FROM users
@@ -77,7 +73,7 @@ export class Payment {
       return []
     }
 
-    return result.rows.map((row) => row.subscriber_id) as number[]
+    return result.rows.map((row) => row.telegram_id) as number[]
   }
 
   public static async create(subscriberId: number): Promise<void> {
